@@ -13,6 +13,14 @@
     @apply hidden
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
 @media (max-width:740px) {
     .active p{
         @apply text-white bg-primary
