@@ -9,7 +9,7 @@ const TopDoctors = () => {
     const { doctors } = useContext(AppContext)
     return (
         <div className='flex flex-col items-center  gap-4 my-16 text-gary-900 md:mx-10'>
-            <h1 className='text-3xl font-medium'> All top doctors</h1>
+            <h1 className='text-4xl text-green-800 font-medium'> All top doctors</h1>
             <p className='sm:w-1/3 text-center text-sm'>Luia eius quam iure nihil tempore cum quod at tur, amet suscipit debitis numquam ab!</p>
 
             <div className='w-full grid grid-cols-auto gap-4 pt-5 gap-y-6 px-3 sm:px-0'>
@@ -26,7 +26,7 @@ const TopDoctors = () => {
                     </div>
                 ))}
             </div>
-            <button onClick={() =>{navigate('/doctors'); scrollTo(0,0)} } className='bg-blue-50 text-gray-600 px-12 py-3 rounded-full mt-10'>More</button>
+            <button onClick={() =>{navigate('/doctors'); scrollTo(0,0)} } className='bg-blue-50 bg-primary text-gray-600 px-12 py-3 rounded-full mt-10'>More</button>
         </div>
     )
 }

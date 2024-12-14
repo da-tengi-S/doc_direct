@@ -1,57 +1,83 @@
 import React from 'react';
 import { assets } from '../assets/assets';
-import { useNavigate , NavLink} from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 
 const Footer = () => {
     const navigate = useNavigate();
 
     return (
-        <div className='md:mx-10'>
-            <div className='flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10 mt-40 text-sm'>
-                <div>
-                    {/* left */}
-                    <img className='mb-5 w-40' src={assets.logo1} alt="" />
-                    <p className='w-full md:w-2/3 text-gray-600 leading-6'>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque, rem maiores dolores in voluptates deleniti natus error incidunt exercitationem architecto ipsum, qui eius tempora odit at? Nihil vitae aut totam!
+        <footer className='bg-gray-100 rounded-[50px] text-gray-900'>
+            <div className='container mx-auto px-9 py-15'>
+                {/* Main content */}
+                <div className='flex flex-col md:grid grid-cols-[3fr_1fr_1fr] gap-10'>
+                    {/* Left Section */}
+                    <div>
+                        <img className='mb-5 w-40' src={assets.logo1} alt="Logo" />
+                        <p className='w-full md:w-3/4 text-gray-600 leading-6'>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque, rem maiores dolores in voluptates deleniti natus error incidunt exercitationem architecto ipsum, qui eius tempora odit at? Nihil vitae aut totam!
+                        </p>
+                    </div>
+
+                    {/* Middle Section */}
+                    <div>
+                        <p className='text-xl font-semibold mb-5'>Company</p>
+                        <ul className='flex flex-col gap-3'>
+                            <li>
+                                <NavLink to='/' className='hover:text-blue-600 transition-colors'>
+                                    Home
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to='/about' className='hover:text-blue-600 transition-colors'>
+                                    About Us
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to='/contact' className='hover:text-blue-600 transition-colors'>
+                                    Contact Us
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to='/privacy-policy' className='hover:text-blue-600 transition-colors'>
+                                    Privacy Policy
+                                </NavLink>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Right Section */}
+                    <div>
+                        <p className='text-xl font-semibold mb-5'>Get in Touch</p>
+                        <ul className='flex flex-col gap-3'>
+                            <li>Phone: <span className='text-gray-900'>123-456-789</span></li>
+                            <li>Email: <span className='text-blue-600 hover:underline'>tenzi77@doc_directgmail.com</span></li>
+                        </ul>
+                        <div className='mt-5'>
+                            <p className='mb-3'>Follow Us:</p>
+                            <div className='flex gap-3'>
+                                <a href="#" className='w-8 h-8 bg-blue-600 text-white flex items-center justify-center rounded-full hover:bg-blue-700'>
+                                    F
+                                </a>
+                                <a href="#" className='w-8 h-8 bg-blue-400 text-white flex items-center justify-center rounded-full hover:bg-blue-500'>
+                                    T
+                                </a>
+                                <a href="#" className='w-8 h-8 bg-red-600 text-white flex items-center justify-center rounded-full hover:bg-red-700'>
+                                    G
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Bottom Section */}
+                <div className='mt-10'>
+                    <hr />
+                    <p className='text-center py-5 text-sm text-gray-600'>
+                        © 2024 Doc-Direct - All Rights Reserved.
                     </p>
                 </div>
-
-                <div>
-                    {/* middle */}
-                    <p className='text-xl font-medium mb-5'>Company</p>
-                    <ul className='flex flex-col gap-2 text-gray-600'>
-
-                        <NavLink to='/'>
-                        <li className='curser-pointer' >Home</li>
-                        </NavLink>
-                        
-                        <NavLink to='/about'>
-                        <li >About us</li>
-                        </NavLink>
-
-                        <NavLink to='/contact'>
-                        <li >Contact us</li>
-
-                        </NavLink>
-                        <li>Privacy policy</li>
-                    </ul>
-                </div>
-
-                <div>
-                    {/* right */}
-                    <p className='text-xl font-medium mb-5'>Get in Touch</p>
-                    <ul className='flex flex-col gap-2 text-gray-600'>
-                        <li>123456789</li>
-                        <li>tenzi77@doc_directgmail.com</li>
-                    </ul>
-                </div>
             </div>
-            {/* copy right */}
-            <div>
-                <hr />
-                <p className='py-5 text-sm text-center'>Copyright 2024 @ Doc-Direct - All Rights Reserved.</p>
-            </div>
-        </div>
+        </footer>
     );
 };
 
