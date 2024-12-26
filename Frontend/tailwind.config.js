@@ -10,7 +10,7 @@ export default {
       colors: {
         'primary': "#4CAF50", // A soothing green 
         'secondary': "#E3F2FD", // A light blue 
-        'accent': "#F9A825" // An optional accent color 
+        'accent': "#F9A825" // An optional accent  
       },
       gridTemplateColumns: {
         'auto': 'repeat(auto-fill, minmax(200px, 1fr))'

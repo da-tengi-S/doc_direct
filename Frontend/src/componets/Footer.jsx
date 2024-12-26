@@ -6,10 +6,10 @@ const Footer = () => {
     const navigate = useNavigate();
 
     return (
-        <footer className='bg-gray-100 rounded-[50px] text-gray-900'>
-            <div className='container mx-auto px-9 py-15'>
+        <footer className='bg-blue-100 y-6 text-gray-900'>
+            <div className='container mx-auto px-6 py-1'>
                 {/* Main content */}
-                <div className='flex flex-col md:grid grid-cols-[3fr_1fr_1fr] gap-10'>
+                <div className='flex flex-col md:grid grid-cols-[3fr_1fr_1fr] gap-10 py-10'>
                     {/* Left Section */}
                     <div>
                         <img className='mb-5 w-40' src={assets.logo1} alt="Logo" />
