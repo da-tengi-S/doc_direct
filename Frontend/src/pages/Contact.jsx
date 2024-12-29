@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { assets } from '../assets/assets';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { AppContext } from '../context/AppContext';
 
 const Contact = () => {
+  const { backendUrl } = useContext(AppContext);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -9,29 +13,38 @@ const Contact = () => {
     message: '',
   });
 
-  const [formStatus, setFormStatus] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
 
-    // Simulate form submission
-    console.log('Form Data Submitted:', formData);
-    setFormStatus('Thank you for contacting us! We will get back to you soon.');
+    const { name, email, subject, message } = formData;
 
-    // Clear the form
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: '',
-    });
+    if (!name || !email || !subject || !message) {
+      return toast.error('All fields are required');
+    }
+
+    try {
+      setIsSubmitting(true);
+      const { data } = await axios.post(`${backendUrl}/api/form`, formData);
+
+      if (data.success) {
+        toast.success('Thank you for contacting us! We will get back to you soon.');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'An error occurred while submitting the form. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-
   return (
     <div className="flex flex-col items-center bg-gradient-to-b from-blue-100 to-gray-50 p-10">
       <div className="text-center">
@@ -81,11 +94,11 @@ const Contact = () => {
           </button>
         </div>
       </div>
-
-      {/* supportt Form */}
+      {/* Support Form */}
+      
       <div className="w-full max-w-xl bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">Support center Us</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">Support Center</h2>
+        <form onSubmit={onSubmitHandler} className="space-y-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
               Name
@@ -154,12 +167,11 @@ const Contact = () => {
           <button
             type="submit"
             className="w-full py-2 px-4 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            disabled={isSubmitting}
           >
-            Submit
+            {isSubmitting ? 'Submitting...' : 'Submit'}
           </button>
         </form>
-
-        {formStatus && <p className="mt-6 text-green-600 text-center text-sm">{formStatus}</p>}
       </div>
     </div>
   );
