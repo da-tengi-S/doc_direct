@@ -5,7 +5,7 @@ const formSchema = new mongoose.Schema({
   email: { type: String, required: true },
   issue: { type: String, required: true },
   message: { type: String, required: true },
-}, { timestamps: true }); // Adds createdAt and updatedAt timestamps
+}, { timestamps: true }); 
 
 const formModel = mongoose.models.form || mongoose.model('form', formSchema);
 

@@ -1,34 +1,50 @@
-import React, { useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AppContext } from '../context/AppContext'
-// import { doctors } from '../assets/assets'
+import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../context/AppContext';
 
 const TopDoctors = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { doctors } = useContext(AppContext);
 
-    const { doctors } = useContext(AppContext)
     return (
-        <div className='flex flex-col items-center  gap-4 my-16 text-gary-900 md:mx-10'>
-            <h1 className='text-4xl text-green-800 font-medium'> All top doctors</h1>
-            <p className='sm:w-1/3 text-center text-sm'>Luia eius quam iure nihil tempore cum quod at tur, amet suscipit debitis numquam ab!</p>
+        <div className="flex flex-col items-center my-16 px-6 text-gray-800">
+            <h1 className="text-4xl font-bold mb-4">Top Doctors</h1>
+            <p className="max-w-md text-center text-base text-gray-600 mb-8">
+                Meet our top-rated doctors, ready to provide you with exceptional care and expertise.
+            </p>
 
-            <div className='w-full grid grid-cols-auto gap-4 pt-5 gap-y-6 px-3 sm:px-0'>
-                {doctors.slice(0, 10).map((item, index) => (
-                    <div  onClick={() => {navigate(`/appointment/${item._id}`); scrollTo(0,0)}} key={index} className='border border-blue-200 rounded-x overflow-hidden cursor-pointer  hover:-translate-y-2 transition-all duration-500'  >
-                        <img className='bg-blue-50' src={item.image} alt="" />
-                        <div className='p-4' >
-                            <div className='flex item-center gap-2 text-sm text-center text-green-500'>
-                                <p className='w-2 h-2 bg-green-500 rounded-full' ></p><p>Avialable</p>
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {doctors?.slice(0, 10).map((doctor, index) => (
+                    <div
+                        key={index}
+                        onClick={() => { navigate(`/appointment/${doctor._id}`); scrollTo(0, 0); }}
+                        className="border border-gray-300 shadow-md rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300"
+                    >
+                        <img
+                            className="w-full h-48 object-top object-cover"
+                            src={doctor.image}
+                            alt={`${doctor.name}`}
+                        />
+                        <div className="p-4">
+                            <div className="flex items-center text-green-500 mb-2">
+                                <span className="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                                <span>Available</span>
                             </div>
-                            <p className='text-gary-900 text-lg font-medium'>{item.name}</p>
-                            <p  className='text-gary-600 text-sm'>{item.speciality}</p>
+                            <p className="text-xl font-semibold text-gray-900 mb-1">{doctor.name}</p>
+                            <p className="text-gray-600">{doctor.speciality}</p>
                         </div>
                     </div>
                 ))}
             </div>
-            <button onClick={() =>{navigate('/doctors'); scrollTo(0,0)} } className='bg-blue-50 bg-primary text-gray-600 px-12 py-3 rounded-full mt-10'>More</button>
-        </div>
-    )
-}
 
-export default TopDoctors
+            <button
+                onClick={() => { navigate('/doctors'); scrollTo(0, 0); }}
+                className="mt-10 bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition-all"
+            >
+                View All Doctors
+            </button>
+        </div>
+    );
+};
+
+export default TopDoctors;

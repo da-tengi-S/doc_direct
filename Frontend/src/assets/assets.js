@@ -4,6 +4,7 @@ import group_profiles from './group_profiles.png'
 import ladyforMoreremovebgpreview from './ladyforMoreremovebgpreview.png'
 import profile_pic from './profile_pic.png'
 import contact_image from './contact_image.png'
+import verified_icon from './verified_icon.svg'
 import about_image from './about_image.png'
 import dropdown_icon from './dropdown_icon.png'
 import logo1 from './logo1.png'
@@ -31,6 +32,7 @@ export const assets = {
     group_profiles,
     logo1,
     profile_pic,
+    verified_icon,
     contact_image,
     about_image,
     menu_icon,

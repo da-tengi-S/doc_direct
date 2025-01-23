@@ -6,6 +6,7 @@ import connectClodinary from './config/cloudinary.js'
 import userRouter from './routes/userRoute.js'
 import { loginUser } from './controllers/usercontroller.js'
 import formRouter from './routes/fromRoute.js'
+import doctorRouter from './routes/doctorRoute.js'
 
 
 const app = express();
@@ -22,10 +23,10 @@ app.use(cors());
 // API endpoints
 app.use('/api/user', userRouter);
 app.use('/api/form', formRouter);
-
+app.use('/api/doctor', doctorRouter)
 // Base endpoint
 app.get('/', (req, res) => {
-  res.send('API is working!');
+  res.send('API is working gg!');
 });
 
 // Start server

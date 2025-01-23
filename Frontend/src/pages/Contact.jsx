@@ -46,58 +46,62 @@ const Contact = () => {
     }
   };
   return (
-    <div className="flex flex-col items-center bg-gradient-to-b from-blue-100 to-gray-50 p-10">
-      <div className="text-center">
-        <p className="text-4xl text-gray-900 font-bold pt-10">
-          Connect with <span className="text-blue-600">Us</span>
-        </p>
-        <div className="mt-6">
-          <img
-            className="w-full max-w-[400px] rounded-xl shadow-xl mx-auto border border-gray-200"
-            src={assets.contact_image}
-            alt="Contact"
-          />
-        </div>
-      </div>
+    
+    <div className="flex flex-col items-center bg-gradient-to-b from-gray-50 to-blue-100 p-8 min-h-screen">
+    <div
+  className="flex flex-col items-center bg-gradient-to-b from-gray-50 to-blue-100 p-6 min-h-screen"
+  style={{
+    backgroundImage: `url('https://www.shutterstock.com/image-photo/doctor-utilizing-advanced-digital-tablet-600nw-2481904799.jpg')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  }}
+>
+  <div className="text-center">
+    <p className="text-5xl text-gray-800 font-extrabold pt-10">
+      Connect with <span className="text-blue-600">Us</span>
+    </p>
+  </div>
 
-      <div className="my-12 grid grid-cols-1 md:grid-cols-3 gap-12 text-gray-800 max-w-6xl">
-        <div className="p-6 bg-white rounded-lg shadow-lg">
-          <p className="font-bold text-xl text-blue-600">Our Office</p>
-          <p className="mt-4 text-gray-600 leading-relaxed">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum ut
-            blanditiis ipsum unde expedita est, dolore voluptatibus aspernatur. Porro sequi
-            corporis, facilis repellendus maiores suscipit perferendis quae debitis dolore
-            vitae.
-          </p>
-        </div>
+  <div className="my-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-800 max-w-7xl">
+    <div className="p-8 bg-white bg-opacity-80 rounded-xl shadow-lg transition-transform transform hover:scale-105">
+      <p className="font-bold text-xl text-blue-600">Our Office</p>
+      <p className="mt-4 text-gray-600 leading-relaxed">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum ut
+        blanditiis ipsum unde expedita est, dolore voluptatibus aspernatur. Porro sequi
+        corporis, facilis repellendus maiores suscipit perferendis quae debitis dolore
+        vitae.
+      </p>
+    </div>
 
-        <div className="p-6 bg-white rounded-lg shadow-lg">
-          <p className="font-bold text-xl text-blue-600">Contact Information</p>
-          <p className="mt-4 text-gray-600 leading-relaxed">
-            Tel: 12345678 <br />
-            <a href="mailto:hello@gmail.com" className="text-blue-500 hover:underline">
-              hello@gmail.com.np
-            </a>
-          </p>
-        </div>
+    <div className="p-8 bg-white bg-opacity-80 rounded-xl shadow-lg transition-transform transform hover:scale-105">
+      <p className="font-bold text-xl text-blue-600">Contact Information</p>
+      <p className="mt-4 text-gray-600 leading-relaxed">
+        Tel: 12345678 <br />
+        <a href="mailto:hello@gmail.com" className="text-blue-500 hover:underline">
+          hello@gmail.com.np
+        </a>
+      </p>
+    </div>
 
-        <div className="p-6 bg-white rounded-lg shadow-lg">
-          <p className="font-bold text-xl text-blue-600">Careers at Doc-Direct</p>
-          <p className="mt-4 text-gray-600 leading-relaxed">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus consequatur
-            accusantium expedita voluptas voluptatibus, mollitia nesciunt iste vero.
-            Accusantium maiores atque ad magni ea quisquam aperiam! Molestiae, dignissimos.
-            Facere, voluptates?
-          </p>
-          <button className="mt-4 py-2 px-6 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all">
-            Explore Jobs
-          </button>
-        </div>
-      </div>
+    <div className="p-8 bg-white bg-opacity-80 rounded-xl shadow-lg transition-transform transform hover:scale-105">
+      <p className="font-bold text-xl text-blue-600">Careers at Doc-Direct</p>
+      <p className="mt-4 text-gray-600 leading-relaxed">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus consequatur
+        accusantium expedita voluptas voluptatibus, mollitia nesciunt iste vero.
+        Accusantium maiores atque ad magni ea quisquam aperiam! Molestiae, dignissimos.
+        Facere, voluptates?
+      </p>
+      <button className="mt-4 py-3 px-8 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all">
+        Explore Jobs
+      </button>
+    </div>
+  </div>
+</div>
+
       {/* Support Form */}
       
-      <div className="w-full max-w-xl bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">Support Center</h2>
+      <div className="w-full max-w-2xl bg-white p-10 rounded-xl shadow-lg">
+        <h2 className="text-4xl font-bold text-center mb-8 text-gray-800">Support Center</h2>
         <form onSubmit={onSubmitHandler} className="space-y-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -109,7 +113,7 @@ const Contact = () => {
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-medium"
+              className="mt-2 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-medium"
               required
             />
           </div>
@@ -124,7 +128,7 @@ const Contact = () => {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-medium"
+              className="mt-2 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-medium"
               required
             />
           </div>
@@ -138,7 +142,7 @@ const Contact = () => {
               name="subject"
               value={formData.subject}
               onChange={handleInputChange}
-              className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-medium"
+              className="mt-2 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-medium"
               required
             >
               <option value="">Select an issue</option>
@@ -159,14 +163,14 @@ const Contact = () => {
               value={formData.message}
               onChange={handleInputChange}
               rows="4"
-              className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-medium"
+              className="mt-2 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-medium"
               required
             ></textarea>
           </div>
 
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="w-full py-3 px-6 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             disabled={isSubmitting}
           >
             {isSubmitting ? 'Submitting...' : 'Submit'}

@@ -10,6 +10,7 @@ import MyProfile from './pages/MyProfile';
 import Contact from './pages/Contact';
 import Appointment from './pages/Appointment';
 import NavBar from './componets/NavBar';
+import MedicalRecord from './pages/MedicalRecord';
 import Footer from './componets/Footer';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
@@ -29,6 +30,7 @@ const App = () => {
           <Route path='/MyAppoiments' element={<MyAppoiments />} />
           <Route path='/appointment/:docId' element={<Appointment />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/record' element={<MedicalRecord />} />
           <Route path='/myprofile' element={<MyProfile />} />
         </Routes>
       </div>

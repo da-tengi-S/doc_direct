@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const SpecialityMenu = () => {
     return (
         <div className='flex flex-col items-center gap-6 py-12 text-gray-700 bg-gray-50' id='speciality'>
-            <h1 className='text-4xl font-semibold text-green-800'>Get Doctors by Speciality</h1>
+            <h1 className='text-4xl font-semibold text-blue-800'>Get Doctors by Speciality</h1>
             <p className='sm:w-2/5 text-center text-sm leading-relaxed'>Discover expert doctors for all your healthcare needs. Choose your specialty and get started!</p>
             <div className='flex sm:justify-center gap-7 pt-8 w-full overflow-x-auto scrollbar-hide'>
                 {specialityData.map((items, index) => (
