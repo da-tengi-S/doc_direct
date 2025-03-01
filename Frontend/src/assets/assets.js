@@ -1,12 +1,15 @@
 import appointment_img from './appointment_img.png'
 import headerdoctors from './headerdoctors.png'
+import header_img from './header_img.png'
 import group_profiles from './group_profiles.png'
 import ladyforMoreremovebgpreview from './ladyforMoreremovebgpreview.png'
-import profile_pic from './profile_pic.png'
 import contact_image from './contact_image.png'
 import verified_icon from './verified_icon.svg'
 import about_image from './about_image.png'
+import experience_icon from './experience_icon.png'
+import Mnotification from './Mnotification.svg'
 import dropdown_icon from './dropdown_icon.png'
+import info_icon from './info_icon.svg'
 import logo1 from './logo1.png'
 import menu_icon from './menu_icon.png'
 import doc1 from './doc1.png';
@@ -22,6 +25,7 @@ import Gastroenterologist from './Gastroenterologist.png';
 import General_physician from './General_physician.png';
 import Gynecologist from './Gynecologist.png';
 import Neurologist from './Neurologist.png';
+import Search from './Search.svg'
 import Pediatricians from './Pediatricians.png';
 
 
@@ -29,11 +33,15 @@ export const assets = {
     appointment_img,
     headerdoctors,
     ladyforMoreremovebgpreview,
+    experience_icon,
     group_profiles,
+    Mnotification,
+    Search,
     logo1,
-    profile_pic,
     verified_icon,
     contact_image,
+    info_icon,
+    header_img,
     about_image,
     menu_icon,
     dropdown_icon,

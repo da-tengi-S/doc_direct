@@ -1,8 +1,7 @@
 
 
-// //  authuser 
+//  authuser 
 import jwt from "jsonwebtoken";
-
 
 const authUser = async (req, res, next) => {
     try {
@@ -12,7 +11,6 @@ const authUser = async (req, res, next) => {
         if (!authHeader) {
             return res.status(401).json({ success: false, message: "Not authorized, login token missing" });
         }
-
         // Support for tokens without "Bearer" prefix
         const token = authHeader.startsWith("Bearer ") ? authHeader.split(' ')[1] : authHeader;
 
@@ -22,6 +20,7 @@ const authUser = async (req, res, next) => {
             return res.status(403).json({ success: false, message: "Invalid or expired token" });
         }
 
+        
         req.body.userId = tokenDecode.id;
         next();
     } catch (error) {

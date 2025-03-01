@@ -1,30 +1,12 @@
 
 
-// import express from 'express'
-
-// import { ragisterUser,loginUser, getProfile, updateProfile } from '../controllers/usercontroller.js'
-// import authUser from '../middleware/authUser.js';
-// import upload  from '../middleware/multer.js';
-
-// const userRouter = express.Router()
-
-
-// userRouter.post('/register', ragisterUser);
-// userRouter.post('/login', loginUser);
-
-
-
-// //for profile 
-// userRouter.get('/get-profile', authUser, getProfile)
-// userRouter.post('/update-profile', upload.single('image'), authUser, updateProfile)
-
-// export default userRouter
-
-
 import express from 'express'
+import nodemailer from "nodemailer";
+import { v4 as uuidv4 } from "uuid";
 
-import { ragisterUser,loginUser, getProfile, updateProfile , bookappointment, listAppoitmnet, cancelAppoitment} from '../controllers/usercontroller.js'
-import authUser from '../middleware/authuser.js';
+
+import { ragisterUser,loginUser, getProfile, updateProfile , bookappointment, listAppoitmnet, cancelAppoitment, addMedicalRecord, fetchMedicalRecordsByUser, addRatingAndComment, verifyEmail} from '../controllers/usercontroller.js'
+import authUser from '../middleware/authUser.js';
 import upload from '../middleware/multer.js';
 
 const userRouter = express.Router()
@@ -32,14 +14,21 @@ const userRouter = express.Router()
 
 userRouter.post('/register', ragisterUser);
 userRouter.post('/login', loginUser);
-userRouter.post('/book-appoitment', authUser, bookappointment)
-
-
+userRouter.post("/verify-email", verifyEmail);
 
 //for profile 
 userRouter.get('/get-profile', authUser, getProfile)
 userRouter.post('/update-profile', upload.single('image'), authUser, updateProfile)
 userRouter.get('/appointment', authUser,listAppoitmnet)
 userRouter.post('/cancel-appoitment', authUser, cancelAppoitment)
+userRouter.post('/book-appoitment', authUser, bookappointment)
+
+//for adding the health record 
+userRouter.post('/add-medRecord', upload.single('file'), authUser, addMedicalRecord);
+userRouter.get("/medical-records", authUser, fetchMedicalRecordsByUser);
+
+//for adding rating and comment
+userRouter.post('/doctors/:doctorId/rate', authUser, addRatingAndComment);
+
 
 export default userRouter

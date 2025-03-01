@@ -3,16 +3,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-*{
-    font-family: Outfit;
-}
-.active hr{
- @apply block
-}
-::-webkit-scrollbar{
-    @apply hidden
+
+/* Apply custom font */
+* {
+    font-family: 'Outfit', sans-serif;
 }
 
+/* Hide scrollbar */
+::-webkit-scrollbar {
+    @apply hidden;
+}
+
+/* Hide scrollbar for all browsers */
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
@@ -21,8 +23,75 @@
     scrollbar-width: none;
 }
 
-@media (max-width:740px) {
-    .active p{
-        @apply text-white bg-primary
+/* Navbar Styling */
+.dark nav {
+    @apply bg-gray-800 text-white;
+}
+
+/* Button Styling */
+button {
+    cursor: pointer;
+    @apply transition-all duration-300 ease-in-out;
+}
+.dark button {
+    @apply bg-gray-700 text-white;
+}
+
+/* Active states */
+.active hr {
+    @apply block;
+}
+
+@media (max-width: 740px) {
+    .active p {
+        @apply text-white bg-primary;
     }
+}
+
+/* Light mode (default) */
+.light {
+    @apply bg-white text-black;
+}
+
+/* Dark mode */
+.dark {
+    @apply bg-gray-900 text-white;
+}
+
+/* Dynamic Color Themes */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+}
+
+.dark {
+    --bg-color: #121212;
+    --text-color: #ffffff;
+}
+
+.high-contrast {
+    --bg-color: #000000;
+    --text-color: #ffff00;
+}
+
+.protanopia {
+    --bg-color: #f5e5d5;
+    --text-color: #0072ff;
+}
+
+.deuteranopia {
+    --bg-color: #e0d5f5;
+    --text-color: #ff0072;
+}
+
+.tritanopia {
+    --bg-color: #d5f5e0;
+    --text-color: #ff7f00;
+}
+
+/* Apply to the body */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
 }
