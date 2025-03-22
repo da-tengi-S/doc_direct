@@ -1,6 +1,7 @@
 import appointment_img from './appointment_img.png'
 import headerdoctors from './headerdoctors.png'
 import header_img from './header_img.png'
+import docbaa from './docbaa.avif'
 import group_profiles from './group_profiles.png'
 import ladyforMoreremovebgpreview from './ladyforMoreremovebgpreview.png'
 import contact_image from './contact_image.png'
@@ -37,6 +38,7 @@ export const assets = {
     group_profiles,
     Mnotification,
     Search,
+    docbaa,
     logo1,
     verified_icon,
     contact_image,

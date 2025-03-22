@@ -51,6 +51,23 @@ const AdminContextProvider = (props) => {
             toast.error(error.response?.data?.message || error.message);
         }
     };
+    const varifyDoctor = async (docId) => {
+        try {
+            const { data } = await axios.post(
+                backendUrl + '/api/admin/varify',
+                { docId },
+                { headers: { Authorization: `Bearer ${aToken}` } } 
+            );
+            if (data.success) {
+                toast.success(data.message);
+                getAlldoctors();
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message);
+        }
+    };
 
     const cancelAppoitmnet = async (appointmentId) => {
         try {
@@ -94,7 +111,26 @@ const AdminContextProvider = (props) => {
             
         }
     }
+
     
+    const getDashData1 = async () =>{
+        try {
+            const { data } = await axios.get(
+                backendUrl + '/api/admin/dashboard',
+             
+                { headers: { Authorization: `Bearer ${aToken}` } } 
+            );
+            if (data.success) {
+                setdashData(data.dashData);
+                console.log(data.dashData);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            
+        }
+    }
+
     const getAllAppointments = async () => {
         try {
             const { data } = await axios.get(
@@ -107,8 +143,7 @@ const AdminContextProvider = (props) => {
             );
     
             if (data.success) {
-                setdashData(data.dashData);
-                console.log(data.dashData)
+                setAppointments(data.appointments);
             } else {
                 toast.error(data.message);
             }
@@ -116,6 +151,29 @@ const AdminContextProvider = (props) => {
             toast.error(error.response?.data?.message || error.message);
         }
     };
+    
+    
+    // const getAllAppointments = async () => {
+    //     try {
+    //         const { data } = await axios.get(
+    //             backendUrl + '/api/admin/appointments',
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${aToken}`, // passing the token
+    //                 },
+    //             }
+    //         );
+    
+    //         if (data.success) {
+    //             setdashData(data.dashData);
+    //             console.log(data.dashData)
+    //         } else {
+    //             toast.error(data.message);
+    //         }
+    //     } catch (error) {
+    //         toast.error(error.response?.data?.message || error.message);
+    //     }
+    // };
     
 
     //  const getAllAppointments = async () =>{
@@ -140,7 +198,7 @@ const AdminContextProvider = (props) => {
 
 
     const value = {
-        aToken, setaToken, backendUrl, doctors, getAlldoctors, changeAvaialabilty, appointments, setAppointments, getAllAppointments, cancelAppoitmnet
+        aToken, setaToken, dashData, backendUrl, varifyDoctor, doctors, getAlldoctors, changeAvaialabilty, appointments, setAppointments, getAllAppointments, cancelAppoitmnet, getDashData, getDashData1
     };
 
     return (

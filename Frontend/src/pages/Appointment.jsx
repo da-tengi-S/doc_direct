@@ -6,6 +6,7 @@ import { AppContext } from '../context/AppContext';
 import { assets } from '../assets/assets';
 import RelatedDoctors from '../componets/RelatedDoctors';
 import { toast } from 'react-toastify';
+import '../index.css';
 import axios from 'axios';
 
 const Appointment = () => {
@@ -172,59 +173,67 @@ const Appointment = () => {
               <p className="text-gray-600 leading-relaxed">{docInfo.about}</p>
             </div>
 
-            <div className="bg-blue-50 p-4 rounded-xl">
-              <div className="flex items-center justify-between">
-                <div className="flex flex-col gap-20">
+            <div className="bg-blue-50 p-1 rounded-xl">
+              <div className="flex items-start justify-between">
+                <div className="flex flex-col gap-5">
                   {/* Consultation Fee */}
                   <div>
                     <p className="text-medium text-gray-600">Consultation Fee</p>
-                    <p className="text-2xl font-bold text-blue-800">
+                    <p className="text-2xl font-bold text-blue-800 h-20">
                       {currencySymbol}{docInfo.fees}
                     </p>
                   </div>
 
                   {/* Experience */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-start h-20 gap-4">
                     <img src={assets.experience_icon} className="w-6 h-6" alt="Experience" />
                     <span className="text-gray-700">{docInfo.experience} Years Experience</span>
+
+                    <br />
+                   
+
+                  </div>
+                  <div>
+                   
+                    <p
+                      className="flex items-center gap-2" >
+                      Contact Number
+                      <span className="text-gray-700">{docInfo.phone}</span>
+                    </p>
+
+
                   </div>
                 </div>
-
-
-                <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                <div className="mt-0 bg-white rounded-2xl p-2 shadow-lg border border-gray-200">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">Patient Reviews</h2>
 
-                  {docInfo.ratings.length > 0 ? (
-                    docInfo.ratings.map((rating, index) => (
-                      <div
-                        key={index}
-                        className="bg-gray-60 p-4 rounded-lg shadow-sm border border-gray-500 mb-4"
-                      >
-
-                        <div className="flex items-center justify-between mb-2">
-                          {/* Star Ratings */}
-                          <div className="flex">
-                            {[...Array(rating.rating)].map((_, i) => (
-                              <span key={i} className="text-yellow-500 text-lg">★</span>
-                            ))}
-                            {[...Array(5 - rating.rating)].map((_, i) => (
-                              <span key={i} className="text-gray-400 text-lg">★</span>
-                            ))}
+                  {/* Scrollable div with forced scrollbar */}
+                  <div className="h-80 overflow-y-scroll pr-2 custom-scrollbar">
+                    {docInfo.ratings.length > 0 ? (
+                      docInfo.ratings.map((rating, index) => (
+                        <div
+                          key={index}
+                          className="bg-gray-60 p-4 rounded-lg shadow-sm border border-gray-500 mb-4"
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex">
+                              {[...Array(rating.rating)].map((_, i) => (
+                                <span key={i} className="text-yellow-500 text-lg">★</span>
+                              ))}
+                              {[...Array(5 - rating.rating)].map((_, i) => (
+                                <span key={i} className="text-gray-400 text-lg">★</span>
+                              ))}
+                            </div>
+                            <p className="text-sm text-gray-900">{new Date(rating.createdAt).toLocaleDateString()}</p>
                           </div>
-
-                          {/* Created Date */}
-                          <p className="text-sm text-gray-900">{new Date(rating.createdAt).toLocaleDateString()}</p>
+                          <p className="text-gray-800 text-lg font-medium mb-2">{rating.comment}</p>
                         </div>
-
-                        <p className="text-gray-800 text-lg font-medium mb-2">{rating.comment}</p>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-gray-500 text-center">No reviews yet.</p>
-                  )}
+                      ))
+                    ) : (
+                      <p className="text-gray-500 text-center">No reviews yet.</p>
+                    )}
+                  </div>
                 </div>
-
-
               </div>
             </div>
           </div>

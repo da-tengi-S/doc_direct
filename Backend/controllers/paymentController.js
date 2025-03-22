@@ -9,7 +9,6 @@ export const createPaymentIntent = async (req, res) => {
         if (!amount || !currency) {
             return res.status(400).json({ error: "Amount and currency are required" });
         }
-
         const paymentIntent = await stripe.paymentIntents.create({
             amount: amount * 100, // Convert to cents
             currency,

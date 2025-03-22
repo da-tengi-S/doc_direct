@@ -116,7 +116,7 @@ import MedicalRecord from './pages/MedicalRecord';
 import Footer from './componets/Footer';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './index.css'; // Ensure theme styles are defined
+import './index.css'; 
 import Setting from './pages/Setting';
 
 const App = () => {

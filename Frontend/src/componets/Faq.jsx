@@ -29,8 +29,12 @@ const Faq = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 via-white to-blue-50 py-16 px-6 sm:px-12 lg:px-24">
-      <h1 className="text-4xl font-extrabold text-blue-800 text-center mb-12">
+    // <div className="bg-gradient-to-r from-blue-50 via-white to-blue-50 py-16 px-6 sm:px-12 lg:px-24">
+    // <div className="bg-[#F5F8FA] py-16 px-6 sm:px-12 lg:px-24">
+    <div className="bg-gradient-to-r from-[##FFFFFF] via-[#FFFFFF] to-[#E3F2FD] py-16 px-6 sm:px-12 lg:px-24">
+
+
+      <h1 className="text-3xl font-extrabold text-black-900 text-center mb-12">
         Frequently Asked Questions
       </h1>
       <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -39,7 +43,7 @@ const Faq = () => {
             key={index}
             className="p-6 bg-white shadow-md rounded-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300"
           >
-            <h2 className="text-2xl font-semibold text-blue-700 mb-4">
+            <h2 className="text-2xl font-semibold text-gary-700 mb-4">
               {faq.question}
             </h2>
             <p className="text-gray-700 leading-relaxed">{faq.answer}</p>

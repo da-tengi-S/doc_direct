@@ -1,302 +1,774 @@
 
 
-// import React, { useContext, useState } from 'react'
-// import { assets } from '../../assets/assets_admin/assets'
-// import { AdminContext } from '../../context/AdminContext'
-// import {toast} from 'react-toastify'
-// import axios from 'axios'
+
+// import React, { useContext, useState, useEffect } from "react";
+// import axios from "axios";
+// import { toast } from "react-toastify";
+// import { DoctorContext } from "../../context/DoctorContext";
 
 // const AddDoctor = () => {
-//   const [docImg, setDocImg] = useState(false)
-//   const [name, setName] = useState('')
-//   const [email, setEmail] = useState('')
-//   const [password, setpassword] = useState('')
-//   const [experience, setExperience] = useState('1 year');
-//   const [fees, setFees] = useState('')
-//   const [about, setAbout] = useState('')
-//   const [specilaity, setSpecilaity] = useState('Genaral Physician')
-//   const [degree, seDegree] = useState('')
-//   const [addres1, setAddress1] = useState('')
-//   const [addres2, setAddress2] = useState('')
+    // const { userData, loading, dToken, backendUrl, loadDoctorProfileData } = useContext(DoctorContext);
+    // const [isEdit, setIsEdit] = useState(false);
+    // const [files, setFiles] = useState({
+    //     profileImage: null,
+    //     document: null
+    // });
+    // const [formState, setFormState] = useState({});
+    // const [uploading, setUploading] = useState(false);
 
-//   const { backendUrl , aToken} = useContext(AdminContext)
+    // useEffect(() => {
+    //     if (userData) {
+    //         setFormState({
+    //             name: userData.name || "",
+    //             phone: userData.phone || "",
+    //             speciality: userData.speciality || "",
+    //             experience: userData.experience || "",
+    //             degree: userData.degree || "",
+    //             fees: userData.fees || "",
+    //             about: userData.about || ""
+    //         });
+    //     }
+    // }, [userData]);
 
-//   const onSubmithandler = async (event) => {
-//     event.preventDefault()
-//     try{
-//       if(!docImg){
-//         return toast.error('img is not selceted')
-//       }
-//       const formData = new FormData()
-//       formData.append('image', docImg)
-//       formData.append('name', name)
-//       formData.append('email', email)
-//       formData.append('password', password)
-//       formData.append('experience', experience)
-//       formData.append('fees', Number(fees))
-//       formData.append('about', about)
-//       formData.append('speciality', specilaity); 
-//       formData.append('degree', degree)
-//       formData.append('address', JSON.stringify({ line1: addres1, line2: addres2 }));
+    // const handleFileChange = (type) => (e) => {
+    //     if (e.target.files[0]) {
+    //         const file = e.target.files[0];
+            
+    //         // Validate file type and size
+    //         if (type === 'document' && !file.type.match(/(image\/.*|application\/pdf)/)) {
+    //             toast.error("Only images and PDF files are allowed!");
+    //             return;
+    //         }
 
-//       //for check 
-//       formData.forEach((value, key)=> {
-//         console.log(`${key} : ${value}`)
-//       })
-//       const { data } = await axios.post(
-//         backendUrl + '/api/admin/add-doctor',
-//         formData,
-//         { headers: { Authorization: `Bearer ${aToken}` } }
-//       );
-      
+    //         if (file.size > 15 * 1024 * 1024) {
+    //             toast.error("File size must be less than 15MB!");
+    //             return;
+    //         }
 
-//       if(data.success ){
-//         toast.success(data.message)
-//         setDocImg(false)
-//         setName('')
-//         setpassword('')
-//         setAddress1("")
-//         setAddress2('')
-//         setAbout('')
-//         setFees('')
-//         setEmail('')
+    //         setFiles(prev => ({
+    //             ...prev,
+    //             [type]: file
+    //         }));
+    //     }
+    // };
 
+    // const handleUpdateProfile = async () => {
+    //     try {
+    //         setUploading(true);
+    //         const formData = new FormData();
 
-//       }
-//       else{
-//         toast.error(data.message)
-//       }
+    //         // Append updated fields
+    //         Object.entries(formState).forEach(([key, value]) => {
+    //             if (value !== userData[key]) {
+    //                 formData.append(key, value);
+    //             }
+    //         });
 
-      
-//     }catch{
-//       toast.error(error.message)
-//       console.log(error)
-//     }
-//   }
+    //         // Append files with proper field names
+    //         if (files.profileImage) {
+    //             formData.append(
+    //                 'profileImage', 
+    //                 files.profileImage,
+    //                 `profile-${Date.now()}-${files.profileImage.name}`
+    //             );
+    //         }
+            
+    //         if (files.document) {
+    //             formData.append(
+    //                 'document', 
+    //                 files.document,
+    //                 `doc-${Date.now()}-${files.document.name}`
+    //             );
+    //         }
 
-//   return (
-//     <form onSubmit={onSubmithandler} className=" max-w-10xl mx-auto p-6 bg-white rounded-lg shadow-md space-y-6">
-//       <h2 className="text-2xl font-bold text-gray-800">Add Doctor</h2>
-      
-//       {/* Upload Doctor Picture */}
-//       <div className="flex flex-col items-center">
-//         <label htmlFor="doc-img" className="cursor-pointer">
-//           <img src={docImg ? URL.createObjectURL(docImg):assets.upload_area} alt="Upload" className="w-32 h-32 rounded-full border-2 border-gray-300 object-cover" />
-//         </label>
-//         <input onChange={(e) =>setDocImg(e.target.files[0])} type="file" id="doc-img" hidden />
-//         <p className="mt-1 text-midium text-black-900">Upload Doctor Picture</p>
-//       </div>
-      
-//       {/* Form Fields */}
-//       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-//         {/* Name Field */}
-//         <div>
-//           <label className="block text-black-600 mb-2">Your Name</label>
-//           <input onChange={(e) =>setName(e.target.value)} value={name} type="text" placeholder="Name" className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required />
+    //         const response = await axios.put(
+    //             `${backendUrl}/api/doctor/update/${userData._id}`,
+    //             formData,
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${dToken}`,
+    //                     'Content-Type': 'multipart/form-data',
+    //                 },
+    //             }
+    //         );
+
+    //         if (response.data.success) {
+    //             await loadDoctorProfileData();
+    //             toast.success("Application submitted successfully");
+    //             setIsEdit(false);
+    //             setFiles({ profileImage: null, document: null });
+    //         } else {
+    //             toast.error(response.data.message);
+    //         }
+    //     } catch (error) {
+    //         console.error('Update error:', error);
+    //         toast.error(
+    //             error.response?.data?.message || 
+    //             'Update failed. Please check file formats (images/PDF) and try again.'
+    //         );
+    //     } finally {
+    //         setUploading(false);
+    //     }
+    // };
+
+    // const cancelEdit = () => {
+    //     setIsEdit(false);
+    //     setFiles({ profileImage: null, document: null });
+    //     setFormState({
+    //         name: userData.name || "",
+    //         phone: userData.phone || "",
+    //         speciality: userData.speciality || "",
+    //         experience: userData.experience || "",
+    //         degree: userData.degree || "",
+    //         fees: userData.fees || "",
+    //         about: userData.about || ""
+    //     });
+    // };
+
+    // if (loading) {
+    //     return (
+    //         <div className="flex justify-center mt-20">
+    //             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    //         </div>
+    //     );
+    // }
+
+    // if (!userData) {
+    //     return (
+    //         <div className="text-center mt-20">
+    //             <p className="text-red-500 text-lg mb-4">⚠️ Profile not found</p>
+    //             <button
+    //                 onClick={loadDoctorProfileData}
+    //                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+    //             >
+    //                 Retry Loading Profile
+    //             </button>
+    //         </div>
+    //     );
+    // }
+
+//     return (
+//         <div className="w-[70%] max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+//             <div className="max-w-3xl mx-auto">
+//                 <div className="bg-white rounded-xl shadow-lg p-8">
+//                     {/* Header Section */}
+//                     <div className="flex items-center gap-6 mb-10 border-b pb-8">
+//                         <div className="relative">
+//                             <label className="cursor-pointer">
+//                                 <img
+//                                     className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
+//                                     src={
+//                                         files.profileImage 
+//                                             ? URL.createObjectURL(files.profileImage)
+//                                             : userData.profileImage || "/default-avatar.png"
+//                                     }
+//                                     alt="Profile preview"
+//                                 />
+//                                 {isEdit && (
+//                                     <>
+//                                         <input
+//                                             type="file"
+//                                             className="hidden"
+//                                             onChange={handleFileChange('profileImage')}
+//                                             accept="image/*"
+//                                         />
+//                                         <div className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full shadow-sm">
+//                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 114.95 0 2.5 2.5 0 01-4.95 0zM12 15v3m0 3h.01M12 21a9 9 0 119-9 9 9 0 01-9 9z" />
+//                                             </svg>
+//                                         </div>
+//                                     </>
+//                                 )}
+//                             </label>
+//                         </div>
+
+//                         <div className="flex-1">
+//                             <h1 className="text-3xl font-bold text-gray-900">
+//                                 Doctor Application Form
+//                             </h1>
+//                             <p className="text-gray-600 mt-2">
+//                                 {isEdit 
+//                                     ? "Update your profile information below"
+//                                     : "Review your profile information"}
+//                             </p>
+//                         </div>
+//                     </div>
+
+//                     {/* Form Sections */}
+//                     <div className="space-y-10">
+//                         {/* Personal Information */}
+                        // <section className="space-y-6">
+                        //     <h2 className="text-xl font-semibold text-gray-900 border-l-4 border-blue-600 pl-3">
+                        //         Personal Information
+                        //     </h2>
+                        //     <div className="grid md:grid-cols-2 gap-6">
+                        //         <DetailItem
+                        //             label="Full Name"
+                        //             value={formState.name}
+                        //             isEdit={isEdit}
+                        //             onChange={(value) => setFormState(prev => ({ ...prev, name: value }))}
+                        //         />
+                        //         <DetailItem
+                        //             label="Email"
+                        //             value={userData.email}
+                        //             isEdit={false}
+                        //         />
+                        //         <DetailItem
+                        //             label="Phone Number"
+                        //             value={formState.phone}
+                        //             isEdit={isEdit}
+                        //             onChange={(value) => setFormState(prev => ({ ...prev, phone: value }))}
+                        //         />
+                        //     </div>
+                        // </section>
+
+//                         {/* Professional Details */}
+//                         <section className="space-y-6">
+//                             <h2 className="text-xl font-semibold text-gray-900 border-l-4 border-blue-600 pl-3">
+//                                 Professional Details
+//                             </h2>
+//                             <div className="grid md:grid-cols-2 gap-6">
+//                                 <DetailItem
+//                                     label="Speciality"
+//                                     value={formState.speciality}
+//                                     isEdit={isEdit}
+//                                     onChange={(value) => setFormState(prev => ({ ...prev, speciality: value }))}
+//                                 />
+//                                 <DetailItem
+//                                     label="Experience (years)"
+//                                     type="number"
+//                                     value={formState.experience}
+//                                     isEdit={isEdit}
+//                                     onChange={(value) => setFormState(prev => ({ ...prev, experience: value }))}
+//                                 />
+//                                 <DetailItem
+//                                     label="Degree"
+//                                     value={formState.degree}
+//                                     isEdit={isEdit}
+//                                     onChange={(value) => setFormState(prev => ({ ...prev, degree: value }))}
+//                                 />
+//                                 <DetailItem
+//                                     label="Consultation Fee"
+//                                     type="number"
+//                                     value={formState.fees}
+//                                     isEdit={isEdit}
+//                                     onChange={(value) => setFormState(prev => ({ ...prev, fees: value }))}
+//                                 />
+//                             </div>
+//                         </section>
+
+//                         {/* About Section */}
+//                         <section className="space-y-6">
+//                             <h2 className="text-xl font-semibold text-gray-900 border-l-4 border-blue-600 pl-3">
+//                                 About You
+//                             </h2>
+//                             <div className="space-y-4">
+//                                 <DetailItem
+//                                     label="About"
+//                                     value={formState.about}
+//                                     isEdit={isEdit}
+//                                     type="textarea"
+//                                     onChange={(value) => setFormState(prev => ({ ...prev, about: value }))}
+//                                 />
+//                             </div>
+//                         </section>
+
+//                         {/* Document Upload Section */}
+//                         <section className="space-y-6">
+//                             <h2 className="text-xl font-semibold text-gray-900 border-l-4 border-blue-600 pl-3">
+//                                 Professional Documents
+//                             </h2>
+//                             <div className="space-y-4">
+//                                 <div className="flex items-center gap-4">
+//                                     {isEdit ? (
+//                                         <label className="flex-1 cursor-pointer bg-gray-100 text-gray-700 p-3 rounded-lg border border-gray-300 hover:bg-gray-200 transition">
+//                                             <input
+//                                                 type="file"
+//                                                 className="hidden"
+//                                                 onChange={handleFileChange('document')}
+//                                                 accept="image/*,application/pdf"
+//                                             />
+//                                             <span className="flex items-center gap-2">
+//                                                 📄 {files.document ? files.document.name : "Upload Document (Image/PDF)"}
+//                                             </span>
+//                                         </label>
+//                                     ) : (
+//                                         <div className="flex-1 bg-gray-50 p-3 rounded-lg">
+//                                             {userData.document?.url ? (
+//                                                 <a
+//                                                     href={userData.document.url}
+//                                                     target="_blank"
+//                                                     rel="noopener noreferrer"
+//                                                     className="text-blue-600 hover:underline"
+//                                                 >
+//                                                     View Current Document
+//                                                 </a>
+//                                             ) : (
+//                                                 <span className="text-gray-500">No document uploaded</span>
+//                                             )}
+//                                         </div>
+//                                     )}
+//                                 </div>
+//                                 <p className="text-sm text-gray-500">
+//                                     Supported formats: JPEG, PNG, PDF (Max 15MB)
+//                                 </p>
+//                             </div>
+//                         </section>
+//                     </div>
+
+//                     {/* Action Buttons */}
+//                     <div className="mt-12 flex justify-end gap-4 border-t pt-8">
+//                         {isEdit ? (
+//                             <>
+//                                 <button
+//                                     onClick={cancelEdit}
+//                                     disabled={uploading}
+//                                     className="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
+//                                 >
+//                                     Cancel
+//                                 </button>
+//                                 <button
+//                                     onClick={handleUpdateProfile}
+//                                     disabled={uploading}
+//                                     className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+//                                 >
+//                                     {uploading ? (
+//                                         <span className="flex items-center gap-2">
+//                                             <span className="animate-spin">⏳</span>
+//                                             Uploading...
+//                                         </span>
+//                                     ) : (
+//                                         "Submit Application"
+//                                     )}
+//                                 </button>
+//                             </>
+//                         ) : (
+//                             <button
+//                                 onClick={() => setIsEdit(true)}
+//                                 className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+//                             >
+//                                 Edit Application
+//                             </button>
+//                         )}
+//                     </div>
+//                 </div>
+//             </div>
 //         </div>
-        
-//         {/* Email Field */}
-//         <div>
-//           <label className="block text-black-600 mb-2">Doctor Email</label>
-//           <input onChange={(e) => setEmail(e.target.value)} value={email} type="email" placeholder="Email" className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required />
-//         </div>
-        
-//         {/* Password Field */}
-//         <div>
-//           <label className="block text-black-600 mb-2">Doctor Password</label>
-//           <input onChange={(e) => setpassword (e.target.value)} value={password} type="password" placeholder="Password" className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required />
-//         </div>
-        
-//         {/* Experience Dropdown */}
-//         <div>
-//           <label className="block text-black-600 mb-2">Doctor Experience</label>
-//           <select  onChange={(e) => setExperience(e.target.value)} value={experience}  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-//             <option value="1 year">1 year</option>
-//             <option value="2 years">2 years</option>
-//             <option value="3 years">3 years</option>
-//             <option value="4 years">4 years</option>
-//             <option value="5 years">5 years</option>
-//             <option value="6 years">6 years</option>
-//             <option value="7 years">7 years</option>
-//             <option value="8 years">8 years</option>
-//             <option value="9 years">9 years</option>
-//             <option value="10 years">10 years</option>
-//           </select>
-//         </div>
-        
-//         {/* Fee Field */}
-//         <div>
-//           <label className="block text-black-600 mb-2">Doctor Fee</label>
-//           <input onChange={(e) => setFees(e.target.value)} value={fees} type="number" placeholder="Fees" className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required />
-//         </div>
-        
-//         {/* Speciality Dropdown */}
-//         <div>
-//           <label className="block text-black-600 mb-2">Speciality</label>
-//           <select   onChange={(e) => setSpecilaity(e.target.value)} value={specilaity}  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-//             <option value="General physician">General physician</option>
-//             <option value="Gynecologist">Gynecologist</option>
-//             <option value="Dermatologist">Dermatologist</option>
-//             <option value="Pediatricians">Pediatricians</option>
-//             <option value="Neurologist">Neurologist</option>
-//             <option value="Gastroenterologist">Gastroenterologist</option>
-//           </select>
-//         </div>
-        
-//         {/* Education Field */}
-//         <div>
-//           <label className="block text-black-600 mb-2">Education</label>
-//           <input onChange={(e) =>seDegree(e.target.value) }  value={degree} type="text" placeholder="Education" className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required />
-//         </div>
-        
-//         {/* Address Fields */}
-//         <div>
-//           <label className="block text-black-600 mb-2">Address</label>
-//           <input  onChange={(e) =>setAddress1(e.target.value) }  value={addres1}  type="text" placeholder="Address 1" className="w-full mb-2 px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required />
-//           <input  onChange={(e) =>setAddress2(e.target.value) }  value={addres2}  type="text" placeholder="Address 2" className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required />
-//         </div>
-//       </div>
-      
-//       {/* About Field */}
-//       <div>
-//         <label className="block text-black-600 mb-2">About</label>
-//         <textarea onChange={(e) =>setAbout(e.target.value)} value={about} placeholder="Write about the doctor" rows={5} className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required></textarea>
-//       </div>
-      
-//       {/* Submit Button */}
-//       <button type='submit' className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition">Add Doctor</button>
-//     </form>
-//   )
-// }
+//     );
+// };
 
-// export default AddDoctor
+// const DetailItem = ({ label, value, isEdit, type = "text", onChange }) => {
+//     return (
+//         <div className="space-y-2">
+//             <label className="block text-sm font-medium text-gray-700">
+//                 {label}
+//             </label>
+//             {isEdit ? (
+//                 type === "textarea" ? (
+//                     <textarea
+//                         value={value || ""}
+//                         onChange={(e) => onChange(e.target.value)}
+//                         className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm h-32 resize-none p-3"
+//                         placeholder={`Enter ${label.toLowerCase()}...`}
+//                     />
+//                 ) : (
+//                     <input
+//                         type={type}
+//                         value={value || ""}
+//                         onChange={(e) => onChange(e.target.value)}
+//                         className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-4 py-2.5"
+//                         placeholder={`Enter ${label.toLowerCase()}...`}
+//                     />
+//                 )
+//             ) : (
+//                 <div className="mt-1 text-gray-900 bg-gray-50 rounded-lg p-3">
+//                     {value || <span className="text-gray-400">Not provided</span>}
+//                 </div>
+//             )}
+//         </div>
+//     );
+// };
 
+// export default AddDoctor;
 
-import React, { useContext, useState } from 'react';
-import { assets } from '../../assets/assets_admin/assets';
-import { AdminContext } from '../../context/AdminContext';
-import { toast } from 'react-toastify';
-import axios from 'axios';
+import React, { useContext, useState, useEffect } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { DoctorContext } from "../../context/DoctorContext";
 
 const AddDoctor = () => {
-  const [docImg, setDocImg] = useState(false);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [experience, setExperience] = useState('1 year');
-  const [fees, setFees] = useState('');
-  const [about, setAbout] = useState('');
-  const [speciality, setSpeciality] = useState('General Physician');
-  const [degree, setDegree] = useState('');
-  const [address1, setAddress1] = useState('');
-  const [address2, setAddress2] = useState('');
+    const { userData, loading, dToken, backendUrl, loadDoctorProfileData } = useContext(DoctorContext);
+    const [isEdit, setIsEdit] = useState(false);
+    const [files, setFiles] = useState({
+        profileImage: null,
+        document: null
+    });
+    const [formState, setFormState] = useState({});
+    const [uploading, setUploading] = useState(false);
 
-  const { backendUrl, aToken } = useContext(AdminContext);
+    useEffect(() => {
+        if (userData) {
+            setFormState({
+                name: userData.name || "",
+                phone: userData.phone || "",
+                speciality: userData.speciality || "",
+                experience: userData.experience || "",
+                degree: userData.degree || "",
+                fees: userData.fees || "",
+                about: userData.about || ""
+            });
+        }
+    }, [userData]);
 
-  const onSubmithandler = async (event) => {
-    event.preventDefault();
-    try {
-      if (!docImg) {
-        return toast.error('Image is not selected');
-      }
-      const formData = new FormData();
-      formData.append('image', docImg);
-      formData.append('name', name);
-      formData.append('email', email);
-      formData.append('password', password);
-      formData.append('experience', experience);
-      formData.append('fees', Number(fees));
-      formData.append('about', about);
-      formData.append('speciality', speciality);
-      formData.append('degree', degree);
-      formData.append('address', JSON.stringify({ line1: address1, line2: address2 }));
+    const handleFileChange = (type) => (e) => {
+        if (e.target.files[0]) {
+            const file = e.target.files[0];
+            
+            if (type === 'document' && !file.type.match(/(image\/.*|application\/pdf)/)) {
+                toast.error("Only images and PDF files are allowed!");
+                return;
+            }
 
-      const { data } = await axios.post(
-        `${backendUrl}/api/admin/add-doctor`,
-        formData,
-        { headers: { Authorization: `Bearer ${aToken}` } }
-      );
+            if (file.size > 15 * 1024 * 1024) {
+                toast.error("File size must be less than 15MB!");
+                return;
+            }
 
-      if (data.success) {
-        toast.success(data.message);
-        setDocImg(false);
-        setName('');
-        setPassword('');
-        setAddress1('');
-        setAddress2('');
-        setAbout('');
-        setFees('');
-        setEmail('');
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
-      console.log(error);
+            setFiles(prev => ({
+                ...prev,
+                [type]: file
+            }));
+        }
+    };
+
+    const handleUpdateProfile = async () => {
+        try {
+            setUploading(true);
+            const formData = new FormData();
+
+            Object.entries(formState).forEach(([key, value]) => {
+                if (value !== userData[key]) {
+                    formData.append(key, value);
+                }
+            });
+
+            if (files.profileImage) {
+                formData.append(
+                    'profileImage', 
+                    files.profileImage,
+                    `profile-${Date.now()}-${files.profileImage.name}`
+                );
+            }
+            
+            if (files.document) {
+                formData.append(
+                    'document', 
+                    files.document,
+                    `doc-${Date.now()}-${files.document.name}`
+                );
+            }
+
+            const response = await axios.put(
+                `${backendUrl}/api/doctor/update/${userData._id}`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${dToken}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            if (response.data.success) {
+                await loadDoctorProfileData();
+                toast.success("Application submitted successfully");
+                setIsEdit(false);
+                setFiles({ profileImage: null, document: null });
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            console.error('Update error:', error);
+            toast.error(
+                error.response?.data?.message || 
+                'Update failed. Please check file formats (images/PDF) and try again.'
+            );
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const cancelEdit = () => {
+        setIsEdit(false);
+        setFiles({ profileImage: null, document: null });
+        setFormState({
+            name: userData.name || "",
+            phone: userData.phone || "",
+            speciality: userData.speciality || "",
+            experience: userData.experience || "",
+            degree: userData.degree || "",
+            fees: userData.fees || "",
+            about: userData.about || ""
+        });
+    };
+
+    if (loading) {
+        return (
+            <div className="flex justify-center mt-20">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+        );
     }
-  };
 
-  return (
-    <form onSubmit={onSubmithandler} className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md space-y-6">
-      <h2 className="text-2xl font-bold text-gray-800 text-center">Make a Application </h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-black-600 mb-2">Name</label>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required />
+    if (!userData) {
+        return (
+            <div className="text-center mt-20">
+                <p className="text-red-500 text-lg mb-4">⚠️ Profile not found</p>
+                <button
+                    onClick={loadDoctorProfileData}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                    Retry Loading Profile
+                </button>
+            </div>
+        );
+    }
+
+    return (
+        <div className="w-full h-screen bg-gradient-to-r from-gray-700 to-gray-800 text-white flex justify-center p-6">
+        <div className="w-[80%] max-w-7xl mx-auto h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+            <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl shadow-lg p-8">
+                    <div className="flex items-center gap-6 mb-10 border-b border-gray-700 pb-8">
+                        <div className="relative">
+                            <label className="cursor-pointer">
+                                <img
+                                    className="w-32 text-black h-32 rounded-full border-4 bg-yellow-200 border-blue-800 shadow-lg object-cover"
+                                    src={
+                                        files.profileImage 
+                                            ? URL.createObjectURL(files.profileImage)
+                                            : userData.profileImage || "/default-avatar.png"
+                                    }
+                                    alt=" ..........................                    Uplaod Photo "
+                                />
+                                {isEdit && (
+                                    <>
+                                        <input
+                                            type="file"
+                                            className="hidden"
+                                            onChange={handleFileChange('profileImage')}
+                                            accept="image/*"
+                                        />
+                                        <div className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full shadow-sm">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 114.95 0 2.5 2.5 0 01-4.95 0zM12 15v3m0 3h.01M12 21a9 9 0 119-9 9 9 0 01-9 9z" />
+                                            </svg>
+                                        </div>
+                                    </>
+                                )}
+                            </label>
+                        </div>
+
+                        <div className="flex-1">
+                            <h1 className="text-3xl font-bold text-white">
+                                Doctor Application Form
+                            </h1>
+                            <p className="text-gray-300 mt-2">
+                                {isEdit 
+                                    ? "Update your profile information below"
+                                    : "Review your profile information"}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-10">
+                        <section className="space-y-6">
+                            <h2 className="text-xl font-semibold text-white border-l-4 border-blue-600 pl-3">
+                                Personal Information
+                            </h2>
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <DetailItem
+                                    label="Full Name"
+                                    value={formState.name}
+                                    isEdit={isEdit}
+                                    onChange={(value) => setFormState(prev => ({ ...prev, name: value }))}
+                                />
+                                <DetailItem
+                                    label="Email"
+                                    value={userData.email}
+                                    isEdit={false}
+                                />
+                                <DetailItem
+                                    label="Phone Number"
+                                    value={formState.phone}
+                                    isEdit={isEdit}
+                                    onChange={(value) => setFormState(prev => ({ ...prev, phone: value }))}
+                                />
+                            </div>
+                        </section>
+
+                        <section className="space-y-6">
+                            <h2 className="text-xl font-semibold text-white border-l-4 border-blue-600 pl-3">
+                                Professional Details
+                            </h2>
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <DetailItem
+                                    label="Speciality"
+                                    value={formState.speciality}
+                                    isEdit={isEdit}
+                                    onChange={(value) => setFormState(prev => ({ ...prev, speciality: value }))}
+                                />
+                                <DetailItem
+                                    label="Experience (years)"
+                                    type="number"
+                                    value={formState.experience}
+                                    isEdit={isEdit}
+                                    onChange={(value) => setFormState(prev => ({ ...prev, experience: value }))}
+                                />
+                                <DetailItem
+                                    label="Degree"
+                                    value={formState.degree}
+                                    isEdit={isEdit}
+                                    onChange={(value) => setFormState(prev => ({ ...prev, degree: value }))}
+                                />
+                                <DetailItem
+                                    label="Consultation Fee"
+                                    type="number"
+                                    value={formState.fees}
+                                    isEdit={isEdit}
+                                    onChange={(value) => setFormState(prev => ({ ...prev, fees: value }))}
+                                />
+                            </div>
+                        </section>
+
+                        <section className="space-y-6">
+                            <h2 className="text-xl font-semibold text-white border-l-4 border-blue-600 pl-3">
+                                About You
+                            </h2>
+                            <div className="space-y-4">
+                                <DetailItem
+                                    label="About"
+                                    value={formState.about}
+                                    isEdit={isEdit}
+                                    type="textarea"
+                                    onChange={(value) => setFormState(prev => ({ ...prev, about: value }))}
+                                />
+                            </div>
+                        </section>
+
+                        <section className="space-y-6">
+                            <h2 className="text-xl font-semibold text-white border-l-4 border-blue-600 pl-3">
+                                Professional Documents
+                            </h2>
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-4">
+                                    {isEdit ? (
+                                        <label className="flex-1 cursor-pointer bg-gray-700 text-gray-300 p-3 rounded-lg border border-gray-600 hover:bg-gray-600 transition">
+                                            <input
+                                                type="file"
+                                                className="hidden"
+                                                onChange={handleFileChange('document')}
+                                                accept="image/*,application/pdf"
+                                            />
+                                            <span className="flex items-center gap-2">
+                                                📄 {files.document ? files.document.name : "Upload Document (Image/PDF)"}
+                                            </span>
+                                        </label>
+                                    ) : (
+                                        <div className="flex-1 bg-gray-700 p-3 rounded-lg">
+                                            {userData.document?.url ? (
+                                                <a
+                                                    href={userData.document.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-400 hover:underline"
+                                                >
+                                                    View Current Document
+                                                </a>
+                                            ) : (
+                                                <span className="text-gray-400">No document uploaded</span>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                                <p className="text-sm text-gray-400">
+                                    Supported formats: JPEG, PNG, PDF (Max 15MB)
+                                </p>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div className="mt-12 flex justify-end gap-4 border-t border-gray-700 pt-8">
+                        {isEdit ? (
+                            <>
+                                <button
+                                    onClick={cancelEdit}
+                                    disabled={uploading}
+                                    className="px-6 py-2.5 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-50"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleUpdateProfile}
+                                    disabled={uploading}
+                                    className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                                >
+                                    {uploading ? (
+                                        <span className="flex items-center gap-2">
+                                            <span className="animate-spin">⏳</span>
+                                            Uploading...
+                                        </span>
+                                    ) : (
+                                        "Submit Application"
+                                    )}
+                                </button>
+                            </>
+                        ) : (
+                            <button
+                                onClick={() => setIsEdit(true)}
+                                className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            >
+                                Make a Application
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
+        
         </div>
-        <div>
-          <label className="block text-black-600 mb-2">Email</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required />
+    );
+};
+
+const DetailItem = ({ label, value, isEdit, type = "text", onChange }) => {
+    return (
+        <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300">
+                {label}
+            </label>
+            {isEdit ? (
+                type === "textarea" ? (
+                    <textarea
+                        value={value || ""}
+                        onChange={(e) => onChange(e.target.value)}
+                        className="mt-1 block w-full rounded-lg border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm h-32 resize-none p-3 bg-gray-700 text-white"
+                        placeholder={`Enter ${label.toLowerCase()}...`}
+                    />
+                ) : (
+                    <input
+                        type={type}
+                        value={value || ""}
+                        onChange={(e) => onChange(e.target.value)}
+                        className="mt-1 block w-full rounded-lg border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-4 py-2.5 bg-gray-700 text-white"
+                        placeholder={`Enter ${label.toLowerCase()}...`}
+                    />
+                )
+            ) : (
+                <div className="mt-1 text-gray-100 bg-gray-700 rounded-lg p-3">
+                    {value || <span className="text-gray-400">Not provided</span>}
+                </div>
+            )}
         </div>
-        <div>
-          <label className="block text-black-600 mb-2">Password</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required />
-        </div>
-        <div>
-          <label className="block text-black-600 mb-2">Experience</label>
-          <select value={experience} onChange={(e) => setExperience(e.target.value)} className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-            {[...Array(10)].map((_, i) => (
-              <option key={i} value={`${i + 1} years`}>{i + 1} years</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block text-black-600 mb-2">Fee</label>
-          <input type="number" value={fees} onChange={(e) => setFees(e.target.value)} className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required />
-        </div>
-        <div>
-          <label className="block text-black-600 mb-2">Speciality</label>
-          <select value={speciality} onChange={(e) => setSpeciality(e.target.value)} className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-            {['General physician', 'Gynecologist', 'Dermatologist', 'Pediatricians', 'Neurologist', 'Gastroenterologist'].map((spec) => (
-              <option key={spec} value={spec}>{spec}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block text-black-600 mb-2">Degree</label>
-          <input type="text" value={degree} onChange={(e) => setDegree(e.target.value)} className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required />
-        </div>
-        <div>
-          <label className="block text-black-600 mb-2">Address</label>
-          <input type="text" value={address1} onChange={(e) => setAddress1(e.target.value)} placeholder="Address 1" className="w-full mb-2 px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required />
-          <input type="text" value={address2} onChange={(e) => setAddress2(e.target.value)} placeholder="Address 2" className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required />
-        </div>
-      </div>
-      <div>
-        <label className="block text-black-600 mb-2">About</label>
-        <textarea value={about} onChange={(e) => setAbout(e.target.value)} className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" required></textarea>
-      </div>
-      <div className="flex flex-col items-center">
-        <label htmlFor="doc-img" className="cursor-pointer">
-          <img src={docImg ? URL.createObjectURL(docImg) : assets.upload_area} alt="Upload" className="w-32 h-32 rounded-full border-2 border-gray-300 object-cover" />
-        </label>
-        <input type="file" id="doc-img" hidden onChange={(e) => setDocImg(e.target.files[0])} />
-      </div>
-      <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition">Add Doctor</button>
-    </form>
-  );
+        
+    );
 };
 
 export default AddDoctor;

@@ -8,6 +8,7 @@ import doctorModel from "../models/doctorModels.js";
 import jwt from "jsonwebtoken";
 import appointmentModel from "../models/appoitmentModels.js";
 import userModel from "../models/userModel.js";
+import { AwsClient } from "google-auth-library";
 
 const addDoctor = async (req, res) => {
     try {
@@ -136,8 +137,6 @@ const adminDashboard = async (req, res) =>{
             appoitment : appoitment.length,
             patients : user.length,
             lastestAppoitments : appoitment.reverse().slice(0, 5)
-
-
         }
 
         res.json({success:true, dashData})
@@ -150,4 +149,40 @@ const adminDashboard = async (req, res) =>{
 
 }
 
-export { addDoctor, loginAdmin, alldoctors , appoemntSAdmin, appoitmnetCancel, adminDashboard};
+const varifydoctor = async (req , res)=> {
+    try {
+        const {docId} = req.body
+        const docData = await doctorModel.findById(docId)
+        await doctorModel.findByIdAndUpdate(docId,{verified : !docData.verified})
+        res.json({success:true, message:'verified sucessfully  '})
+    } catch (error) {
+        console.log(error)
+        res.json({success:false, message:error.message})
+    }
+  }
+
+
+  // for dashboard data 
+//   const adminDashbaord = async (req, res) =>{
+//     try {
+
+//         const doctors = await doctorModel.find({})
+//         const users = await userModel.find({})
+//         const appoitment = await appointmentModel.find({})
+
+//         const dashData = {
+//             doctors: doctors.length,
+//             appoitment: appoitment.length,
+//             users : users.length,
+//             lastestAppoitments : appoitment.reverse().slice(0,5)
+//         }
+        
+//        } catch (error) {
+//         console.log(error)
+//         res.json({success:false, message:error.message})
+//     }
+//   }
+  
+
+
+export { addDoctor, loginAdmin, alldoctors , appoemntSAdmin, appoitmnetCancel, adminDashboard, varifydoctor};

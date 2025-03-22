@@ -377,10 +377,10 @@ const addRatingAndComment = async (req, res) => {
             return res.status(404).json({ success: false, message: "Doctor not found." });
         }
 
-        const existingRating = doctor.ratings.find(r => r.patientId.toString() === patientId);
-        if (existingRating) {
-            return res.status(400).json({ success: false, message: "You have already rated this doctor." });
-        }
+        // const existingRating = doctor.ratings.find(r => r.patientId.toString() === patientId);
+        // if (existingRating) {
+        //     return res.status(400).json({ success: false, message: "You have already rated this doctor." });
+        // }
 
         doctor.ratings.push({
             patientId,

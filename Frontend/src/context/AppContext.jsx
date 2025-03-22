@@ -42,7 +42,7 @@ const AppContextProvider = (props) => {
       }
     } catch (error) {
       console.error(error);
-      toast.error("Error fetching user profile.");
+      toast.error("Error fetching user profile.11");
     }
   };
 

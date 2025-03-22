@@ -8,9 +8,10 @@ import people_icon from './people_icon.svg'
 import upload_area from './upload_area.svg'
 import Mnotification from './Mnotification.svg'
 import list_icon from './list_icon.svg'
+import prifileIcon from './prifileIcon.png'
 import tick_icon from './tick_icon.svg'
 import setting from './setting.svg'
-import appointments_icon from './appointments_icon.svg'
+import appointments_icon from './appointment_icon (2).png'
 import earning_icon from './earning_icon.svg'
 import patients_icon from './patients_icon.svg'
 
@@ -19,6 +20,7 @@ export const assets = {
     logo1,
     appointment_icon,
     cancel_icon,
+    prifileIcon,
     Mnotification,
     doctor_icon,
     setting,

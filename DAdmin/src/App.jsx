@@ -9,13 +9,15 @@ import Sidebar from './Componets/Sidebar';
 import { Routes, Route } from 'react-router-dom';
 import Dashbaord from './pages/Admin/Dashbaord';
 import AllApoitment from './pages/Admin/AllApoitment';
-import AddDoctor from './pages/Admin/AddDoctor';
+import AddDoctor from './pages/Doctor/AddDoctor';
 import Doctorlist from './pages/Admin/Doctorlist';
 import { DoctorContext } from './context/DoctorContext';
 import DocDashbaord from './pages/Doctor/DocDashbaord';
 import DoctorAppointment from './pages/Doctor/DoctorAppointment';
 import DoctorProfile from './pages/Doctor/DoctorProfile';
 import DoctorApproval from './pages/Admin/DoctorApproval';
+import Setting from './pages/Admin/Setting';
+import Analytocs from './pages/Admin/Analytocs';
 
 const App = () => {
 
@@ -32,11 +34,13 @@ const App = () => {
         <Routes>
           {/* admin route */}
           <Route path='/' element={<></>} />
-          <Route path='/admin-dashbord' element={<Dashbaord/>} />
+          <Route path='/admin-dashboard' element={<Dashbaord/>} />
           <Route path='/AllApoitment' element={<AllApoitment/>} />
           <Route path='/addDoctor' element={<AddDoctor/>} />
+          <Route path='/setting' element={<Setting/>} />
           <Route path='/DoctorApproval' element={<DoctorApproval/>} />
           <Route path='/doctor-list' element={<Doctorlist/>} />
+          <Route path='/analytics' element={<Analytocs/>} />
 
           {/* doctor route  */}
           <Route path='/doctor-dashboard' element={<DocDashbaord/>} />
