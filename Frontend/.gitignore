@@ -1,3 +1,4 @@
 # Ignore environment variables
 .env
 echo ".env" >> .gitignore
+echo "node_modules/" >> .gitignore
