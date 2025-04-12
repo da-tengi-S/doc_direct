@@ -12,6 +12,8 @@ import MedicalRecord from '../models/medicalRecordModel.js';
 import doctorModel from '../models/doctorModels.js';
 import appointmentModel from '../models/appoitmentModels.js';
 import { sendVerificationEmail } from '../utils/emailService.js';
+// import notificationModel from '../models/notificationModel.js';
+import AccessRequest from '../models/AccessRequest.js';
 
 
 const ragisterUser = async (req, res) => {
@@ -43,12 +45,12 @@ const ragisterUser = async (req, res) => {
         const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
         // Create a new user with "verified" set to false
-        const newUser = new userModel({ 
-            name, 
-            email, 
-            password: hashedPassword, 
-            verified: false, 
-            verificationCode 
+        const newUser = new userModel({
+            name,
+            email,
+            password: hashedPassword,
+            verified: false,
+            verificationCode
         });
         await newUser.save();
 
@@ -116,7 +118,7 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ success: false, message: "Invalid password." });
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '10h' });
 
         res.status(200).json({ success: true, token, message: "Login successful." });
     } catch (error) {
@@ -202,7 +204,7 @@ const bookappointment = async (req, res) => {
             amount: docData.fees,
             slotDate,
             slotTime,
-            reason, // Include reason in appointment data
+            reason,
             date: Date.now()
         };
 
@@ -262,6 +264,7 @@ const cancelAppoitment = async (req, res) => {
         res.status(500).json({ success: false, message: "An error occurred. catch Please try again later." });
     }
 }
+
 
 
 const addMedicalRecord = async (req, res) => {
@@ -328,6 +331,7 @@ const addMedicalRecord = async (req, res) => {
         });
     }
 };
+
 const fetchMedicalRecordsByUser = async (req, res) => {
     try {
         // Same approach as appointments
@@ -358,10 +362,11 @@ const fetchMedicalRecordsByUser = async (req, res) => {
     }
 };
 
+
 const addRatingAndComment = async (req, res) => {
     try {
         const { rating, comment } = req.body;
-        const patientId = req.body.userId; 
+        const patientId = req.body.userId;
         const doctorId = req.params.doctorId;
 
         if (!patientId) {
@@ -377,10 +382,6 @@ const addRatingAndComment = async (req, res) => {
             return res.status(404).json({ success: false, message: "Doctor not found." });
         }
 
-        // const existingRating = doctor.ratings.find(r => r.patientId.toString() === patientId);
-        // if (existingRating) {
-        //     return res.status(400).json({ success: false, message: "You have already rated this doctor." });
-        // }
 
         doctor.ratings.push({
             patientId,
@@ -399,4 +400,81 @@ const addRatingAndComment = async (req, res) => {
 };
 
 
-export { ragisterUser, loginUser, getProfile, updateProfile, bookappointment, listAppoitmnet, cancelAppoitment, addMedicalRecord, fetchMedicalRecordsByUser, addRatingAndComment,verifyEmail };
+
+const getAccessRequests = async (req, res) => {
+    console.log('Received request to view access requests');
+    console.log('User ID:', req.user?.id); 
+    
+    try {
+        const requests = await AccessRequest.find({ 
+            patientId: req.body.userId,
+            status: 'pending'
+        });
+
+        const results = await Promise.all(requests.map(async (request) => {
+            const doctor = await doctorModel.findById(request.doctorId).select('name speciality');
+            
+            return {
+                _id: request._id,
+                doctorId: request.doctorId,
+                doctorName: doctor?.name || 'Unknown',
+                specialization: doctor?.speciality || 'N/A',
+                requestedAt: request.createdAt
+            };
+        }));
+
+        res.status(200).json({ 
+            success: true, 
+            requests: results
+        });
+    } catch (err) {
+        console.error('Error in getAccessRequests:', err);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Server error', 
+            error: err.message 
+        });
+    }
+};
+
+const respondToRequest = async (req, res) => {
+    const { requestId } = req.params;
+    const { status } = req.body;
+    const patientId = req.body.userId; 
+
+    try {
+        const request = await AccessRequest.findOne({
+            _id: requestId,
+            patientId: patientId
+        });
+
+        if (!request) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Request not found or unauthorized' 
+            });
+        }
+
+        // Update the request status
+        request.status = status;
+        await request.save();
+
+        // If accepted, you might want to create access permission here
+        if (status === 'accepted') {
+            // Add logic to grant access
+        }
+
+        return res.status(200).json({ 
+            success: true, 
+            message: `Request ${status} successfully` 
+        });
+    } catch (err) {
+        console.error('Error responding to request:', err);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Server error', 
+            error: err.message 
+        });
+    }
+};
+export { ragisterUser, getAccessRequests, respondToRequest, loginUser, getProfile, updateProfile, bookappointment, listAppoitmnet, cancelAppoitment, addMedicalRecord, fetchMedicalRecordsByUser, addRatingAndComment, verifyEmail };

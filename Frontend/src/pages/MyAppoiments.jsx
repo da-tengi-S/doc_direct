@@ -1,6 +1,3 @@
-
-
-
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import axios from 'axios';
@@ -45,24 +42,56 @@ const MyAppointments = () => {
   const cancelledAppointment = async (appointment) => {
     const [day, month, year] = appointment.slotDate.split('_');
     const formattedMonth = month.padStart(2, '0');
-
+  
     const [time, period] = appointment.slotTime.split(' ');
     let [hours, minutes] = time.split(':');
-
-    if (period === 'PM' && hours !== '12') {
-      hours = parseInt(hours) + 12;
-    } else if (period === 'AM' && hours === '12') {
-      hours = '00';
+  
+    // Convert hours to integer for calculations
+    hours = parseInt(hours);
+  
+    if (period === 'PM' && hours !== 12) {
+      hours += 12;
+    } else if (period === 'AM' && hours === 12) {
+      hours = 0;
     }
+  
+    // Pad hours and minutes to two digits
+    const paddedHours = hours.toString().padStart(2, '0');
+    const paddedMinutes = minutes.padStart(2, '0');
 
-    const formattedDateTime = `${year}-${formattedMonth}-${day}T${hours}:${minutes}:00`;
+    const formattedDay = day.padStart(2, '0');
+const formattedDateTime = `${year}-${formattedMonth}-${formattedDay}T${paddedHours}:${paddedMinutes}:00`;
+
+
     const appointmentDateTime = new Date(formattedDateTime);
-
+  
     if (isNaN(appointmentDateTime.getTime())) {
       setModalMessage('Invalid appointment date/time format.');
       setShowModal(true);
+      console.log(formattedDateTime,appointmentDateTime)
       return;
     }
+  // const cancelledAppointment = async (appointment) => {
+  //   const [day, month, year] = appointment.slotDate.split('_');
+  //   const formattedMonth = month.padStart(2, '0');
+
+  //   const [time, period] = appointment.slotTime.split(' ');
+  //   let [hours, minutes] = time.split(':');
+
+  //   if (period === 'PM' && hours !== '12') {
+  //     hours = parseInt(hours) + 12;
+  //   } else if (period === 'AM' && hours === '12') {
+  //     hours = '00';
+  //   }
+
+  //   const formattedDateTime = `${year}-${formattedMonth}-${day}T${hours}:${minutes}:00`;
+  //   const appointmentDateTime = new Date(formattedDateTime);
+
+  //   if (isNaN(appointmentDateTime.getTime())) {
+  //     setModalMessage('Invalid appointment date/time format.');
+  //     setShowModal(true);
+  //     return;
+  //   }
 
     const currentTime = new Date();
     const timeDifference = (appointmentDateTime - currentTime) / (1000 * 60 * 60);

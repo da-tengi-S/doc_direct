@@ -1,92 +1,4 @@
-// import React, { useContext, useState } from 'react';
-// import axios from 'axios';
-// import { assets } from '../assets/assets_admin/assets'
-// import { AdminContext } from '../context/AdminContext';
-// import { toast } from 'react-toastify';
 
-// const Login = () => {
-//   const [state, setState] = useState("admin");
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const { setaToken, backendUrl } = useContext(AdminContext);
-
-//   const onSubmitHandler = async (event) => {
-//     event.preventDefault();
-
-//     // Validation for empty fields
-//     if (!email || !password) {
-//       toast.error("Please fill in all fields");
-//       return;
-//     }
-
-//     try {
-//       if (state === "admin") {
-//         const { data } = await axios.post(`${backendUrl}/api/admin/login`, { email, password });
-
-//         if (data.success) {
-//           localStorage.setItem('aToken', data.token);
-//           setaToken(data.token);
-//           toast.success('Login Successful');
-//         } else {
-//           toast.error(data.message || 'Something went wrong');
-//         }
-//       } else {
-//         toast.error('Only Admin login is allowed');
-//       }
-//     } catch (error) {
-//       console.error("Login error:", error);
-//       toast.error(error.response?.data?.message || "An unexpected error occurred");
-//     }
-//   };
-
-//   return (
-//     <form onSubmit={onSubmitHandler} className='min-h-[80vh] flex items-center'>
-//       <div className='flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-black-600 text-sm shadow-lg'>
-//         <p className='text-2xl font-semibold m-auto'>
-//           <span className='text-primary'>{state}</span> Login
-//         </p>
-//         <div className='w-full'>
-//           <p>Email</p>
-//           <input
-//             onChange={(e) => setEmail(e.target.value)}
-//             value={email}
-//             className='border border-[#DADADA] rounded w-full p-2 mt-1'
-//             type="email"
-//             required
-//           />
-//         </div>
-//         <div className='w-full'>
-//           <p>Password</p>
-//           <input
-//             onChange={(e) => setPassword(e.target.value)}
-//             value={password}
-//             className='border border-[#DADADA] rounded w-full p-2 mt-1'
-//             type="password"
-//             required
-//           />
-//         </div>
-//         <button className='bg-primary text-black w-full py-2 rounded-md text-base'>Login</button>
-//         {state === "admin" ? (
-//           <p>
-//             Doctor Login{' '}
-//             <span className='text-primary underline cursor-pointer' onClick={() => setState('doctor')}>
-//               Click here
-//             </span>
-//           </p>
-//         ) : (
-//           <p>
-//             Admin Login{' '}
-//             <span className='text-primary underline cursor-pointer' onClick={() => setState('admin')}>
-//               Click here
-//             </span>
-//           </p>
-//         )}
-//       </div>
-//     </form>
-//   );
-// };
-
-// export default Login;
 
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
@@ -133,7 +45,7 @@ const Login = () => {
           localStorage.setItem('aToken', data.token);
           setaToken(data.token);
           toast.success('Admin Login Successful');
-          navigate('/admin/dashboard');
+          navigate('/admin-dashboard');
         }
       } else if (userType === 'doctor') {
         if (doctorAction === 'login') {
@@ -142,7 +54,7 @@ const Login = () => {
             localStorage.setItem('dToken', data.token);
             setDtoken(data.token);
             toast.success('Doctor Login Successful');
-            navigate('/doctor/dashboard');
+            navigate('/DocDashbaord');
           }
         } else {
           const { data } = await axios.post(`${backendUrl}/api/doctor/register`, {
@@ -162,103 +74,93 @@ const Login = () => {
       toast.error(error.response?.data?.message || "An error occurred");
     }
   };
-
   return (
-    <form onSubmit={onSubmitHandler} className='min-h-[80vh] flex items-center'>
-      <div className='flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-black-600 text-sm shadow-lg'>
-        <p className='text-2xl font-semibold m-auto'>
-          {userType === 'admin' 
-            ? 'Admin Login'
-            : `Doctor ${doctorAction === 'login' ? 'Login' : 'Sign Up'}`}
-        </p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-500 to-green-500">
+      
+      <form onSubmit={onSubmitHandler} className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md space-y-4 transition-all">
+        
+        <h2 className="text-2xl  text-center text-gray-800 mb-6">
+        <h1 className='text-3xl font-bold text-blue-900 mb-3'>Doc Direct </h1>< hr />
+       
+          {userType === 'admin' ? 'Admin Portal' : `Doctor ${doctorAction === 'login' ? 'Portal' : 'Registration'}`}
+        </h2>
 
-        {/* Name Field for Doctor Signup */}
         {userType === 'doctor' && doctorAction === 'signup' && (
-          <div className='w-full'>
-            <p>Full Name</p>
+          <div className="space-y-2">
+            <label className="block text-gray-700 text-sm font-semibold">Full Name</label>
             <input
               onChange={(e) => setName(e.target.value)}
               value={name}
-              className='border border-[#DADADA] rounded w-full p-2 mt-1'
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
               type="text"
               required
+              placeholder=""
             />
           </div>
         )}
 
-        {/* Email Field */}
-        <div className='w-full'>
-          <p>Email</p>
+        <div className="space-y-2">
+          <label className="block text-gray-700 text-sm font-semibold">Email</label>
           <input
             onChange={(e) => setEmail(e.target.value)}
             value={email}
-            className='border border-[#DADADA] rounded w-full p-2 mt-1'
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
             type="email"
             required
+            placeholder=""
           />
         </div>
 
-        {/* Password Field */}
-        <div className='w-full'>
-          <p>Password</p>
+        <div className="space-y-2">
+          <label className="block text-gray-700 text-sm font-semibold">Password</label>
           <input
             onChange={(e) => setPassword(e.target.value)}
             value={password}
-            className='border border-[#DADADA] rounded w-full p-2 mt-1'
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
             type="password"
             required
+            placeholder=""
           />
         </div>
 
-        <button className='bg-primary text-black w-full py-2 rounded-md text-base'>
-          {userType === 'admin' 
-            ? 'Login' 
-            : doctorAction === 'login' ? 'Login' : 'Create Account'}
+        <button className="w-full p-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-md">
+          {userType === 'admin' ? 'Login' : doctorAction === 'login' ? 'Login' : 'Create Account'}
         </button>
 
-        {/* Toggle between Admin/Doctor */}
-        {userType === 'admin' ? (
-          <p>
-            Doctor Login{' '}
-            <span className='text-primary underline cursor-pointer' onClick={() => {
-              setUserType('doctor');
-              clearForm();
-              setDoctorAction('login');
-            }}>
-              Click here
-            </span>
-          </p>
-        ) : (
-          <p>
-            Admin Login{' '}
-            <span className='text-primary underline cursor-pointer' onClick={() => {
-              setUserType('admin');
-              clearForm();
-            }}>
-              Click here
-            </span>
-          </p>
-        )}
-
-        {/* Toggle between Doctor Login/Signup */}
-        {userType === 'doctor' && (
-          <p>
-            {doctorAction === 'login' 
-              ? 'Need an account? ' 
-              : 'Already have an account? '}
-            <span
-              className='text-primary underline cursor-pointer'
+        <div className="text-center space-y-2 pt-4">
+          <p className="text-gray-600 text-sm">
+            {userType === 'admin' ? 'Are you a doctor?' : 'Admin access?'}{' '}
+            <button
+              type="button"
               onClick={() => {
-                setDoctorAction(doctorAction === 'login' ? 'signup' : 'login');
+                setUserType(userType === 'admin' ? 'doctor' : 'admin');
                 clearForm();
+                if (userType === 'admin') setDoctorAction('login');
               }}
+              className="text-blue-600 hover:text-blue-800 font-medium underline transition-colors"
             >
-              {doctorAction === 'login' ? 'Sign Up' : 'Login'}
-            </span>
+              Switch here
+            </button>
           </p>
-        )}
-      </div>
-    </form>
+
+          {userType === 'doctor' && (
+            <p className="text-gray-600 text-sm">
+              {doctorAction === 'login' ? 'New to our platform?' : 'Already have an account?'}{' '}
+              <button
+                type="button"
+                onClick={() => {
+                  setDoctorAction(doctorAction === 'login' ? 'signup' : 'login');
+                  clearForm();
+                }}
+                className="text-blue-600 hover:text-blue-800 font-medium underline transition-colors"
+              >
+                {doctorAction === 'login' ? 'Register now' : 'Login instead'}
+              </button>
+            </p>
+          )}
+        </div>
+      </form>
+    </div>
   );
 };
 

@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import googleAuth from '../controllers/authController.js';
 
 
-import { ragisterUser,loginUser, getProfile, updateProfile , bookappointment, listAppoitmnet, cancelAppoitment, addMedicalRecord, fetchMedicalRecordsByUser, addRatingAndComment, verifyEmail} from '../controllers/usercontroller.js'
+import { ragisterUser,loginUser, getProfile, updateProfile , bookappointment, listAppoitmnet,getAccessRequests, respondToRequest, cancelAppoitment, addMedicalRecord, fetchMedicalRecordsByUser, addRatingAndComment, verifyEmail} from '../controllers/usercontroller.js'
 import authUser from '../middleware/authUser.js';
 import upload from '../middleware/multer.js';
 
@@ -24,6 +24,14 @@ userRouter.post('/update-profile', upload.single('image'), authUser, updateProfi
 userRouter.get('/appointment', authUser,listAppoitmnet)
 userRouter.post('/cancel-appoitment', authUser, cancelAppoitment)
 userRouter.post('/book-appoitment', authUser, bookappointment)
+
+// userRouter.put('/respond-access/:requestId', authUser, respondToAccessRequest);
+// userRouter.get('/pending-requests', authUser, getPendingRequests);
+
+userRouter.post('/view-access-requests',authUser, getAccessRequests);
+userRouter.put('/respond-access-request/:requestId', authUser, respondToRequest);
+
+
 
 //for adding the health record 
 userRouter.post('/add-medRecord', upload.single('file'), authUser, addMedicalRecord);

@@ -9,12 +9,14 @@ import jwt from "jsonwebtoken";
 import appointmentModel from "../models/appoitmentModels.js";
 import userModel from "../models/userModel.js";
 import { AwsClient } from "google-auth-library";
+import formModel from "../models/formModel.js";
+
 
 const addDoctor = async (req, res) => {
     try {
         const { name, email, password, speciality, degree, experience, address, fees, about } = req.body;
         const imageFile = req.file;
-        
+
         if (!name || !email || !password || !speciality || !degree || !experience || !address || !fees || !about) {
             return res.json({ success: false, message: "Missing details 12" });
         }
@@ -73,51 +75,69 @@ const loginAdmin = async (req, res) => {
 };
 
 // api to get all doctor list for admin panel 
-
 const alldoctors = async (req, res) => {
     try {
         const doctors = await doctorModel.find({}).select('-password') // ensure not to show password 
-        res.json({success:true, doctors})
+        res.json({ success: true, doctors })
     } catch (error) {
         console.log(error)
-        res.json({success:false, message:error.message})
+        res.json({ success: false, message: error.message })
     }
 }
+
+// In your controller file (e.g., issueController.js)
+const getallIssues = async (req, res) => {
+    try {
+        const issues = await formModel.find({}).sort({ createdAt: -1 }); // Add sorting
+        res.status(200).json({
+            success: true,
+            data: issues,
+        });
+    } catch (error) {
+        console.error("Database Error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Server error while fetching issues",
+
+        });
+    }
+};
+
 
 //API for all appoitnment list 
 const appoemntSAdmin = async (req, res) => {
     try {
         const appointments = await appointmentModel.find({})
-        res.json({success:true, appointments})        
+        res.json({ success: true, appointments })
     } catch (error) {
         console.log(error)
-        res.json({success:false, message:error.message})
+        res.json({ success: false, message: error.message })
     }
 }
 
 
 //api to cancel appoitment 
-const  appoitmnetCancel = async (req, res) => {
+const appoitmnetCancel = async (req, res) => {
 
     try {
         const { appointmentId } = req.body
         const appointmentData = await appointmentModel.findById(appointmentId)
 
         // verify appoitment user
-   
-            await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true })
 
-            //relasing doctor slot 
-            const { docId, slotDate, slotTime } = appointmentData
-            const doctorData = await doctorModel.findById(docId)
+        await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true })
 
-            let slots_booked = doctorData.slots_booked
+        //relasing doctor slot 
+        const { docId, slotDate, slotTime } = appointmentData
+        const doctorData = await doctorModel.findById(docId)
 
-            slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime)
-            await doctorModel.findByIdAndUpdate(docId, { slots_booked })
-            res.json({ success: true, message: "appoitment Cancelled" })
+        let slots_booked = doctorData.slots_booked
 
-        
+        slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime)
+        await doctorModel.findByIdAndUpdate(docId, { slots_booked })
+        res.json({ success: true, message: "appoitment Cancelled" })
+
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "An error occurred. catch Please try again later." });
@@ -125,21 +145,21 @@ const  appoitmnetCancel = async (req, res) => {
 }
 
 // API TO GET DASHBAORD FOR ADMIN
-const adminDashboard = async (req, res) =>{
+const adminDashboard = async (req, res) => {
 
     try {
         const doctors = await doctorModel.find({})
         const user = await userModel.find({})
         const appoitment = await appointmentModel.find({})
-        
+
         const dashData = {
-            doctors : doctors.length, 
-            appoitment : appoitment.length,
-            patients : user.length,
-            lastestAppoitments : appoitment.reverse().slice(0, 5)
+            doctors: doctors.length,
+            appoitment: appoitment.length,
+            patients: user.length,
+            lastestAppoitments: appoitment.reverse().slice(0, 5)
         }
 
-        res.json({success:true, dashData})
+        res.json({ success: true, dashData })
 
 
     } catch (error) {
@@ -149,40 +169,64 @@ const adminDashboard = async (req, res) =>{
 
 }
 
-const varifydoctor = async (req , res)=> {
+const varifydoctor = async (req, res) => {
     try {
-        const {docId} = req.body
-        const docData = await doctorModel.findById(docId)
-        await doctorModel.findByIdAndUpdate(docId,{verified : !docData.verified})
-        res.json({success:true, message:'verified sucessfully  '})
+        const { docId } = req.body;
+
+        // Find current doctor data
+        const docData = await doctorModel.findById(docId);
+
+        if (!docData) {
+            return res.json({ success: false, message: "Doctor not found" });
+        }
+
+        // Toggle verified and set reject to false
+        const updatedDoctor = await doctorModel.findByIdAndUpdate(
+            docId,
+            {
+                verified: !docData.verified,
+                reject: false,
+            },
+            { new: true }
+        );
+
+        res.json({ success: true, message: 'Verified successfully', doctor: updatedDoctor });
+
     } catch (error) {
-        console.log(error)
-        res.json({success:false, message:error.message})
+        console.log(error);
+        res.json({ success: false, message: error.message });
     }
-  }
+};
+
+const rejectDoctor = async (req, res) => {
+    try {
+        const { docId } = req.body;
+
+        if (!docId) {
+            return res.status(400).json({ success: false, message: "Doctor ID is required." });
+        }
+
+        const doctor = await doctorModel.findById(docId);
+
+        if (!doctor) {
+            return res.status(404).json({ success: false, message: "Doctor not found." });
+        }
+
+        // Set reject to true and verified to false
+        doctor.reject = true;
+        doctor.verified = false;
+        await doctor.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Doctor has been rejected by admin.",
+        });
+    } catch (error) {
+        console.error("Reject Doctor Error:", error);
+        res.status(500).json({ success: false, message: "Server Error: " + error.message });
+    }
+};
 
 
-  // for dashboard data 
-//   const adminDashbaord = async (req, res) =>{
-//     try {
 
-//         const doctors = await doctorModel.find({})
-//         const users = await userModel.find({})
-//         const appoitment = await appointmentModel.find({})
-
-//         const dashData = {
-//             doctors: doctors.length,
-//             appoitment: appoitment.length,
-//             users : users.length,
-//             lastestAppoitments : appoitment.reverse().slice(0,5)
-//         }
-        
-//        } catch (error) {
-//         console.log(error)
-//         res.json({success:false, message:error.message})
-//     }
-//   }
-  
-
-
-export { addDoctor, loginAdmin, alldoctors , appoemntSAdmin, appoitmnetCancel, adminDashboard, varifydoctor};
+export { addDoctor, getallIssues, rejectDoctor, loginAdmin, alldoctors, appoemntSAdmin, appoitmnetCancel, adminDashboard, varifydoctor };

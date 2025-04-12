@@ -16,8 +16,8 @@ const RelatedDoctors = ({ speciality, docId }) => {
   }, [doctors, speciality, docId])
   return (
     <div>
-      <div className='flex flex-col items-center  gap-4 my-16 text-gary-900 md:mx-10'>
-        <h1 className='text-3xl font-medium'> All top doctors</h1>
+      <div className='flex flex-col items-center gap-6 py-12 text-gray-700 bg-gray-50'>
+        <h1 className='text-4xl font-semibold text-blue-800'> All top doctors</h1>
         <p className='sm:w-1/3 text-center text-sm'>Luia eius quam iure nihil tempore cum quod at tur, amet suscipit debitis numquam ab!</p>
 
         <div className='w-full grid grid-cols-auto gap-4 pt-5 gap-y-6 px-3 sm:px-0'>

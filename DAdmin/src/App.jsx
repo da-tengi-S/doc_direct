@@ -1,3 +1,68 @@
+// import React, { useContext } from 'react'
+// import Login from './pages/Login'
+// import { ToastContainer, toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
+// import {AppContext} from './context/AppContext'
+// import { AdminContext } from './context/AdminContext';
+// import Navbar from './Componets/Navbar';
+// import Sidebar from './Componets/Sidebar';
+// import { Routes, Route } from 'react-router-dom';
+// import Dashbaord from './pages/Admin/Dashbaord';
+// import AllApoitment from './pages/Admin/AllApoitment';
+// import AddDoctor from './pages/Doctor/AddDoctor';
+// import Doctorlist from './pages/Admin/Doctorlist';
+// import { DoctorContext } from './context/DoctorContext';
+// import DocDashbaord from './pages/Doctor/DocDashbaord';
+// import DoctorAppointment from './pages/Doctor/DoctorAppointment';
+// import DoctorProfile from './pages/Doctor/DoctorProfile';
+// import DoctorApproval from './pages/Admin/DoctorApproval';
+// import Setting from './pages/Admin/Setting';
+// import Analytocs from './pages/Admin/Analytocs';
+
+
+// import { VideoProvider } from './context/VideoContext';
+
+// const App = () => {
+
+
+
+//   const {aToken} = useContext(AdminContext)
+//   const {dToken} = useContext(DoctorContext)
+//   return aToken || dToken ? (
+//     <div className='bg-gray-200'>
+//       <ToastContainer/>
+//       <Navbar/>
+//       <div className=' flex items-start'>
+//         <Sidebar/>
+//         <Routes>
+//           {/* admin route */}
+//           <Route path='/' element={<></>} />
+//           <Route path='/admin-dashboard' element={<Dashbaord/>} />
+//           <Route path='/AllApoitment' element={<AllApoitment/>} />
+//           <Route path='/addDoctor' element={<AddDoctor/>} />
+//           <Route path='/setting' element={<Setting/>} />
+//           <Route path='/DoctorApproval' element={<DoctorApproval/>} />
+//           <Route path='/doctor-list' element={<Doctorlist/>} />
+//           <Route path='/analytics' element={<Analytocs/>} />
+
+//           {/* doctor route  */}
+//           <Route path='/DocDashbaord' element={<DocDashbaord/>} />
+//           <Route path='/DoctorAppointment' element={<DoctorAppointment/>} />
+//           <Route path='/doctor-profile' element={<DoctorProfile/>} />
+
+          
+//         </Routes>
+//       </div>
+//     </div>
+//   )
+//   :(<>
+//   <Login/>
+//   <ToastContainer/>
+//   </>)
+// }
+// export default App
+
+
 import React, { useContext } from 'react'
 import Login from './pages/Login'
 import { ToastContainer, toast } from 'react-toastify';
@@ -17,7 +82,13 @@ import DoctorAppointment from './pages/Doctor/DoctorAppointment';
 import DoctorProfile from './pages/Doctor/DoctorProfile';
 import DoctorApproval from './pages/Admin/DoctorApproval';
 import Setting from './pages/Admin/Setting';
+import DocNotification from './pages/Doctor/DocNotification';
 import Analytocs from './pages/Admin/Analytocs';
+import Issues from './pages/Admin/Issues';
+
+
+// import { VideoProvider } from './context/VideoContext';
+// import DoctorVideoCall from './Componets/DoctorVideoCall';
 
 const App = () => {
 
@@ -26,6 +97,7 @@ const App = () => {
   const {aToken} = useContext(AdminContext)
   const {dToken} = useContext(DoctorContext)
   return aToken || dToken ? (
+    // <VideoProvider>
     <div className='bg-gray-200'>
       <ToastContainer/>
       <Navbar/>
@@ -40,17 +112,21 @@ const App = () => {
           <Route path='/setting' element={<Setting/>} />
           <Route path='/DoctorApproval' element={<DoctorApproval/>} />
           <Route path='/doctor-list' element={<Doctorlist/>} />
+          <Route path='/issue' element={<Issues/>} />
           <Route path='/analytics' element={<Analytocs/>} />
 
           {/* doctor route  */}
-          <Route path='/doctor-dashboard' element={<DocDashbaord/>} />
-          <Route path='/doctor-appoitment' element={<DoctorAppointment/>} />
+          <Route path='/DocDashbaord' element={<DocDashbaord/>} />
+          <Route path='/DoctorAppointment' element={<DoctorAppointment/>} />
           <Route path='/doctor-profile' element={<DoctorProfile/>} />
+          <Route path='/doctornoti' element={<DocNotification/>} />
+          {/* <Route path='/videocall' element={<DoctorVideoCall />} /> */}
 
           
         </Routes>
       </div>
     </div>
+    // </VideoProvider>
   )
   :(<>
   <Login/>

@@ -1,11 +1,13 @@
 import appointment_img from './appointment_img.png'
 import headerdoctors from './headerdoctors.png'
 import header_img from './header_img.png'
+import header2 from './header2.jpg'
 import docbaa from './docbaa.avif'
 import group_profiles from './group_profiles.png'
 import ladyforMoreremovebgpreview from './ladyforMoreremovebgpreview.png'
 import contact_image from './contact_image.png'
 import verified_icon from './verified_icon.svg'
+import calender from './calender.gif'
 import about_image from './about_image.png'
 import experience_icon from './experience_icon.png'
 import Mnotification from './Mnotification.svg'
@@ -37,6 +39,8 @@ export const assets = {
     experience_icon,
     group_profiles,
     Mnotification,
+    header2,
+    calender,
     Search,
     docbaa,
     logo1,

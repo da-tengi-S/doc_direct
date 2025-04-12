@@ -2,9 +2,13 @@
 import doctorModel from "../models/doctorModels.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
 import { v2 as couldinary } from 'cloudinary'
 import { v2 as cloudinary } from 'cloudinary'
+import appointmentModel from "../models/appoitmentModels.js";
+import AccessRequest from "../models/AccessRequest.js";
+import userModel from '../models/userModel.js';
+import MedicalRecord from '../models/medicalRecordModel.js';
+import mongoose from "mongoose";
 
 // Register a new doctor
 const registerDoctor = async (req, res) => {
@@ -64,18 +68,6 @@ const loginDoctor = async (req, res) => {
 };
 
 
-
-// Get all doctors
-// const doctorList = async (req, res) => {
-//   try {
-//     const doctors = await doctorModel.find({}).select(["-password", "-email"]);
-//     res.status(200).json({ success: true, doctors });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ success: false, message: "Server error. Please try again later." });
-//   }
-// };
-
 // Get all verified doctors
 const doctorList = async (req, res) => {
   try {
@@ -98,7 +90,7 @@ const doctorList = async (req, res) => {
 
 const getDoctorProfile = async (req, res) => {
   try {
-      const doctorId = req.user.id; // Get from middleware
+      const doctorId = req.user.id; 
 
       if (!doctorId) {
           return res.status(400).json({ success: false, message: "Doctor ID is required" });
@@ -153,7 +145,7 @@ const updateDoctorProfile = async (req, res) => {
     if (files.document) {
       try {
         const docUpload = await cloudinary.uploader.upload(files.document[0].path, {
-          resource_type: "auto",
+          resource_type: "raw",
           folder: "doctor_documents",
         });
         updateData.document = {
@@ -202,13 +194,256 @@ const changeAvaibality = async (req , res)=> {
       const {docId} = req.body
       const docData = await doctorModel.findById(docId)
       await doctorModel.findByIdAndUpdate(docId,{available : !docData.available})
-      res.json({success:true, message:'Availablity changed  '})
+      res.json({success:true, message:' '})
   } catch (error) {
       console.log(error)
       res.json({success:false, message:error.message})
   }
 }
 
+const changeVideoCall = async (req, res) => {
+  try {
+      const { docId } = req.body;
+      console.log("Received docId:", docId);
+
+      if (!docId) {
+          return res.status(400).json({ success: false, message: "Doctor ID is required" });
+      }
+
+      const docData = await doctorModel.findById(docId);
+
+      if (!docData) {
+          return res.status(404).json({ success: false, message: "Doctor not found" });
+      }
+
+      await doctorModel.findByIdAndUpdate(docId, { videocall: !docData.videocall });
+
+      res.json({ success: true, message: "Video call availability changed" });
+  } catch (error) {
+      console.error("Error changing video call availability:", error);
+      res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+// Updated backend API
+const doctorappoitemnt = async (req, res) => {
+  try {
+    // console.log("Authenticated doctor ID:", req.user.id); // Add this
+    const appointments = await appointmentModel.find({ docId: req.user.id });
+    // console.log("Database query results:", appointments); 
+    res.json({ success: true, appointments });
+  } catch (error) {
+    console.error("API Error:", error);
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+};
 
 
-export { registerDoctor, loginDoctor, doctorList, getDoctorProfile, updateDoctorProfile, changeAvaibality };
+const appoitmentComplete = async (req, res)=>{
+  try {
+    const { appointmentId } = req.body;
+    const docId = req.user.id; 
+
+    const appoitmentData = await appointmentModel.findById(appointmentId)
+
+    if(appoitmentData && appoitmentData.docId === docId){
+      await appointmentModel.findByIdAndUpdate(appointmentId, {isCompleted: true})
+      return res.json({success:true, message:"Appointment completed "})
+    }
+    else{
+      return res.json({success:false, message:"failed   "})
+
+    }
+  } catch (error) {
+    console.error("API Error:", error);
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+}
+
+const DcancelAppoitment = async (req, res) => {
+  try {
+      const { appointmentId } = req.body;
+      const docId = req.user.id; 
+
+      const appointmentData = await appointmentModel.findById(appointmentId);
+
+      if (!appointmentData) {
+          return res.status(404).json({ success: false, message: 'Appointment not found' });
+      }
+
+      // Verify the appointment belongs to the authenticated doctor
+      if (appointmentData.docId.toString() !== docId.toString()) {
+          return res.status(401).json({ success: false, message: 'Unauthorized Attempt' });
+      }
+
+      await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true });
+      res.json({ success: true, message: "Appointment Cancelled by Doctor" });
+
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: "An error occurred. Please try again later." });
+  }
+}
+
+
+const doctorDashbaord = async (req, res) => {
+  try {
+    const docId = req.user.id; 
+
+    const appointment = await appointmentModel.find({ docId });
+
+    let earning = 0;
+    appointment.forEach((items) => {
+      if (items.isCompleted || items.payment) {
+        earning += items.amount;
+      }
+    });
+
+    let patients = new Set();
+    appointment.forEach((items) => {
+      patients.add(items.userId);
+    });
+    patients = [...patients];
+
+    const dashdata = {
+      earning,
+      appointment: appointment.length,
+      patients: patients.length,
+      latestAppointment: [...appointment].reverse().slice(0, 5),
+    };
+
+
+    res.json({ success: true, dashdata });
+
+  } catch (error) {
+    console.error("Dashboard API Error:", error);
+    res.status(500).json({ success: false, message: "An error occurred. Please try again later." });
+  }
+};
+
+
+
+const requestMedicalAccess = async (req, res) => {
+  const { doctorId, patientId } = req.body;
+
+  try {
+    // Check if request already exists
+    const existing = await AccessRequest.findOne({ doctorId, patientId });
+    if (existing) {
+      return res.status(400).json({ success: false, message: 'Request already exists' });
+    }
+
+    // Fetch doctor's name
+    const doctor = await doctorModel.findById(doctorId);
+    if (!doctor) {
+      return res.status(404).json({ success: false, message: 'Doctor not found' });
+    }
+
+    const doctorName = doctor.name;
+
+    // Create new request
+    const newRequest = new AccessRequest({ doctorId, doctorName, patientId });
+    await newRequest.save();
+
+    res.status(201).json({ success: true, message: 'Access request sent.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error', error: err.message });
+  }
+};
+
+// Doctor views accepted records
+const getAccessibleRecords = async (req, res) => {
+  const { doctorId } = req.body;
+ 
+  try {
+    const acceptedRequests = await AccessRequest.find({ doctorId, status: 'accepted' });
+
+    const patientIds = acceptedRequests.map(req => req.patientId);
+
+    const records = await MedicalRecord.find({
+      userId: { $in: patientIds }
+    });
+
+    res.status(200).json({ success: true, records });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+
+const addMedicalRecordbyDoctor = async (req, res) => {
+  try {
+    // Destructure the request body to get necessary fields
+    const { userId, year, medicine, notes, chronicIllnesses, doctor,  pastSurgeries, vaccinations, labResults, doctorId, doctorName } = req.body;
+    const imageFile = req.file;
+
+    // Check if patient ID exists
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "Patient ID is required." });
+    }
+
+    // Find the patient in the database
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Patient not found." });
+    }
+
+    // Check if doctor has access to this patient (access control)
+    const access = await AccessRequest.findOne({ doctorId, patientId: userId, status: 'accepted' });
+ 
+
+    // Validate essential fields
+    if (!year || !medicine) {
+      return res.status(400).json({ success: false, message: "Year and medicine are required." });
+    }
+
+    // Handle optional file upload for medical report (image)
+    let fileUrl = null;
+    if (imageFile) {
+      try {
+        const fileUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: "image" });
+        fileUrl = fileUpload.secure_url;
+      } catch (uploadError) {
+        console.error("Cloudinary upload error:", uploadError);
+        return res.status(500).json({ success: false, message: "File upload failed." });
+      }
+    }
+
+    // Create a new medical record object
+    const medicalRecordData = {
+      userId,
+      year,
+      medicine,
+      notes: notes || "",
+      chronicIllnesses: chronicIllnesses || "",
+      pastSurgeries: pastSurgeries || "",
+      vaccinations: vaccinations || "",
+      labResults: labResults || "",
+     
+      doctor,
+      image: fileUrl,
+      date: new Date()
+    };
+
+    // Create and save the new medical record
+    const newMedicalRecord = new MedicalRecord(medicalRecordData);
+    await newMedicalRecord.save();
+
+    // Send success response
+    res.status(201).json({
+      success: true,
+      message: "Medical record added successfully.",
+      medicalRecord: newMedicalRecord
+    });
+  } catch (error) {
+    // Log and return server error if something goes wrong
+    console.error("Error adding medical record:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while adding medical record.",
+      error: error.message
+    });
+  }
+};
+
+export { registerDoctor,addMedicalRecordbyDoctor, requestMedicalAccess,getAccessibleRecords, changeVideoCall,  loginDoctor, doctorList, getDoctorProfile, updateDoctorProfile, changeAvaibality, doctorappoitemnt, appoitmentComplete, DcancelAppoitment, doctorDashbaord };
