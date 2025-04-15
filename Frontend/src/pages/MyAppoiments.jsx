@@ -42,56 +42,36 @@ const MyAppointments = () => {
   const cancelledAppointment = async (appointment) => {
     const [day, month, year] = appointment.slotDate.split('_');
     const formattedMonth = month.padStart(2, '0');
-  
+
     const [time, period] = appointment.slotTime.split(' ');
     let [hours, minutes] = time.split(':');
-  
+
     // Convert hours to integer for calculations
     hours = parseInt(hours);
-  
+
     if (period === 'PM' && hours !== 12) {
       hours += 12;
     } else if (period === 'AM' && hours === 12) {
       hours = 0;
     }
-  
+
     // Pad hours and minutes to two digits
     const paddedHours = hours.toString().padStart(2, '0');
     const paddedMinutes = minutes.padStart(2, '0');
 
     const formattedDay = day.padStart(2, '0');
-const formattedDateTime = `${year}-${formattedMonth}-${formattedDay}T${paddedHours}:${paddedMinutes}:00`;
+    const formattedDateTime = `${year}-${formattedMonth}-${formattedDay}T${paddedHours}:${paddedMinutes}:00`;
 
 
     const appointmentDateTime = new Date(formattedDateTime);
-  
+
     if (isNaN(appointmentDateTime.getTime())) {
       setModalMessage('Invalid appointment date/time format.');
       setShowModal(true);
-      console.log(formattedDateTime,appointmentDateTime)
+      console.log(formattedDateTime, appointmentDateTime)
       return;
     }
-  // const cancelledAppointment = async (appointment) => {
-  //   const [day, month, year] = appointment.slotDate.split('_');
-  //   const formattedMonth = month.padStart(2, '0');
 
-  //   const [time, period] = appointment.slotTime.split(' ');
-  //   let [hours, minutes] = time.split(':');
-
-  //   if (period === 'PM' && hours !== '12') {
-  //     hours = parseInt(hours) + 12;
-  //   } else if (period === 'AM' && hours === '12') {
-  //     hours = '00';
-  //   }
-
-  //   const formattedDateTime = `${year}-${formattedMonth}-${day}T${hours}:${minutes}:00`;
-  //   const appointmentDateTime = new Date(formattedDateTime);
-
-  //   if (isNaN(appointmentDateTime.getTime())) {
-  //     setModalMessage('Invalid appointment date/time format.');
-  //     setShowModal(true);
-  //     return;
-  //   }
 
     const currentTime = new Date();
     const timeDifference = (appointmentDateTime - currentTime) / (1000 * 60 * 60);
@@ -222,11 +202,13 @@ const formattedDateTime = `${year}-${formattedMonth}-${formattedDay}T${paddedHou
                   <div className="flex flex-wrap gap-3">
                     {!item.cancelled && (
                       <>
-                        <button
-                          className="px-5 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105"
-                        >
-                          Pay Online
-                        </button>
+                        {item.paymentMethod !== 'Cash' && (
+                          <button
+                            className="px-5 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105"
+                          >
+                            Pay Online
+                          </button>
+                        )}
                         <button
                           onClick={() => cancelledAppointment(item)}
                           className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105"
@@ -235,6 +217,7 @@ const formattedDateTime = `${year}-${formattedMonth}-${formattedDay}T${paddedHou
                         </button>
                       </>
                     )}
+
                   </div>
 
                   {/* Ratings Section */}

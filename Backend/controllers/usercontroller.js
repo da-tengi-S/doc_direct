@@ -172,9 +172,59 @@ const updateProfile = async (req, res) => {
 
 // for appoitment book 
 
+// const bookappointment = async (req, res) => {
+//     try {
+//         const { userId, docId, slotDate, slotTime, reason } = req.body; // Accept reason
+//         const docData = await doctorModel.findById(docId).select('-password');
+//         if (!docData.available) {
+//             return res.json({ success: false, message: "Doctor not available" });
+//         }
+//         let slots_booked = docData.slots_booked;
+
+//         // Check for slot availability
+//         if (slots_booked[slotDate]) {
+//             if (slots_booked[slotDate].includes(slotTime)) {
+//                 return res.json({ success: false, message: "Slot not available" });
+//             } else {
+//                 slots_booked[slotDate].push(slotTime);
+//             }
+//         } else {
+//             slots_booked[slotDate] = [];
+//             slots_booked[slotDate].push(slotTime);
+//         }
+
+//         const userData = await userModel.findById(userId).select('-password');
+//         delete docData.slots_booked;
+
+//         const appointmentData = {
+//             userId,
+//             docId,
+//             userData,
+//             docData,
+//             amount: docData.fees,
+//             slotDate,
+//             slotTime,
+//             reason,
+//             date: Date.now()
+//         };
+
+//         const newAppointment = new appointmentModel(appointmentData);
+//         await newAppointment.save();
+
+//         // Save new slot data in docData
+//         await doctorModel.findByIdAndUpdate(docId, { slots_booked });
+
+//         res.json({ success: true, message: "Appointment Booked" });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ success: false, message: "An error occurred. Please try again later." });
+//     }
+// };
+
+
 const bookappointment = async (req, res) => {
     try {
-        const { userId, docId, slotDate, slotTime, reason } = req.body; // Accept reason
+        const { userId, docId, slotDate, slotTime, reason, paymentMethod } = req.body; // Accept reason
         const docData = await doctorModel.findById(docId).select('-password');
         if (!docData.available) {
             return res.json({ success: false, message: "Doctor not available" });
@@ -204,6 +254,8 @@ const bookappointment = async (req, res) => {
             amount: docData.fees,
             slotDate,
             slotTime,
+            paymentMethod, // <-- add this
+            payment: paymentMethod === "Online" ? true : false, // Automatically mark payment if it's Online
             reason,
             date: Date.now()
         };

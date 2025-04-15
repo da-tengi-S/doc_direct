@@ -19,6 +19,8 @@ const Appointment = () => {
   const [selectedReason, setSelectedReason] = useState('');
   const [customReason, setCustomReason] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('');
+
 
   const navigate = useNavigate();
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -106,11 +108,17 @@ const Appointment = () => {
 
       const slotDate = `${day}_${month}_${year}`;
 
+      // const { data } = await axios.post(
+      //   `${backendUrl}/api/user/book-appoitment`,
+      //   { docId, slotDate, slotTime, reason },
+      //   { headers: { Authorization: `Bearer ${token}` } }
+      // );
       const { data } = await axios.post(
         `${backendUrl}/api/user/book-appoitment`,
-        { docId, slotDate, slotTime, reason },
+        { docId, slotDate, slotTime, reason, paymentMethod },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      
 
       if (data.success) {
         toast.success(data.message);
@@ -124,6 +132,7 @@ const Appointment = () => {
       toast.error(error.message);
     }
   };
+  
 
   useEffect(() => {
     fetchDocInfo();
@@ -190,11 +199,11 @@ const Appointment = () => {
                     <span className="text-gray-700">{docInfo.experience} Years Experience</span>
 
                     <br />
-                   
+
 
                   </div>
                   <div>
-                   
+
                     <p
                       className="flex items-center gap-2" >
                       Contact Number
@@ -319,15 +328,49 @@ const Appointment = () => {
                   <p className="text-sm text-gray-500 mt-1">{customReason.length}/{MAX_REASON_LENGTH} characters</p>
                 </div>
               )}
+
+              
+          
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Select Payment Method</h3>
+            <div className="flex gap-6">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="payment"
+                  value="Cash"
+                  checked={paymentMethod === 'Cash'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="accent-blue-600"
+                />
+                Cash
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="payment"
+                  value="Online"
+                  checked={paymentMethod === 'Online'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="accent-blue-600"
+                />
+                Online
+              </label>
+            </div>
+          </div>
+
             </div>
 
             <button
               onClick={() => setShowModal(true)}
               className="bg-blue-600 text-white text-sm font-medium px-8 py-3 rounded-full mt-6"
             >
+              
               Book an Appointment
             </button>
           </div>
+
+
 
           <RelatedDoctors docId={docId} speciality={docInfo.speciality} />
 

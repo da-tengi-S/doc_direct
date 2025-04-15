@@ -214,6 +214,14 @@ const DoctorAppointment = () => {
               </div>
             </div>
 
+            <div className="flex justify-between">
+              <span className="text-gray-600">Payment Method:</span>
+              <span className="text-gray-800 font-medium">
+                {appointment.paymentMethod || 'Not Specified'}
+              </span>
+            </div>
+
+
             <div className="mt-4 pt-4 border-t border-gray-200 flex flex-col gap-2">
               {!appointment.isCompleted && !appointment.cancelled && (
                 <div className="flex justify-end space-x-3">

@@ -117,7 +117,7 @@ const MedicalRecord = () => {
         );
 
         if (data.success) {
-            toast.success(`Request ${status} successfully`);
+            toast.success(`Request ${status} `);
             setAccessRequests(prev => prev.filter(req => req._id !== requestId));
         }
     } catch (err) {
